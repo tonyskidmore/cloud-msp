@@ -25,13 +25,24 @@ Some highlevel aims in a bullet pointed list:
 
 ## Installation
 
+Azure Cloud Shell:
+
+```sh
+mkdir ~/.virtualenvs
+python -m venv ~/.virtualenvs/ansible-azure-msp
+source ~/.virtualenvs/ansible-azure-msp/bin/activate
+pip install ansible[azure]
+git clone https://github.com/tonyskidmore/ansible-azure-msp.git
+```
+![](images/cloud-shell.gif)
+
 Linux:
 
 ```sh
 TODO
 ```
 
-Linux:
+Windows:
 
 ```sh
 TODO
