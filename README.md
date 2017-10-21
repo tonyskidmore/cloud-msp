@@ -81,4 +81,4 @@ another command
 5. Create a new Pull Request
 
 <!-- Markdown link & img dfn's -->
-[wiki]: https://github.com/tonyskidmore/ansible-azure-msp/wiki
+[wiki]: https://github.com/tonyskidmore/ansible-azure-msp/wiki/ansible-azure-msp
