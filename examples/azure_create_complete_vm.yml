@@ -59,7 +59,7 @@
   - name: Debug azure_resourcegroup_facts
     debug: 
       var: azure_resourcegroup_facts
-      verbosity_level: "{{ verbosity_level }}"
+      verbosity: "{{ verbosity_level }}"
 
   - name: create resource group
     azure_rm_resourcegroup:
@@ -71,7 +71,7 @@
   - name: Debug azure_resourcegroup
     debug: 
       var: azure_resourcegroup
-      verbosity_level: "{{ verbosity_level }}"    
+      verbosity: "{{ verbosity_level }}"    
   
   - name: Create virtual network
     azure_rm_virtualnetwork:
@@ -83,7 +83,7 @@
   - name: Debug azure_virtualnetwork
     debug: 
       var: azure_virtualnetwork
-      verbosity_level: "{{ verbosity_level }}" 
+      verbosity: "{{ verbosity_level }}" 
     
   - name: Add subnet
     azure_rm_subnet:
@@ -96,7 +96,7 @@
   - name: Debug azure_subnet
     debug: 
       var: azure_subnet
-      verbosity_level: "{{ verbosity_level }}" 
+      verbosity: "{{ verbosity_level }}" 
     
   - name: Create public IP address
     azure_rm_publicipaddress:
@@ -104,11 +104,11 @@
       allocation_method: "{{ az_publicipaddress_method }}"
       name: "{{ az_publicipaddress_name }}"
     register: azure_publicipaddress
-	  
+
   - name: Debug azure_publicipaddress
     debug: 
       var: azure_publicipaddress
-      verbosity_level: "{{ verbosity_level }}"       
+      verbosity: "{{ verbosity_level }}"       
       
   - name: Create Network Security Group that allows SSH
     azure_rm_securitygroup:
@@ -120,7 +120,7 @@
   - name: Debug azure_securitygroup
     debug: 
       var: azure_securitygroup
-      verbosity_level: "{{ verbosity_level }}" 
+      verbosity: "{{ verbosity_level }}" 
     
   - name: Create virtual network inteface card
     azure_rm_networkinterface:
@@ -135,7 +135,7 @@
   - name: Debug azure_networkinterface
     debug: 
       var: azure_networkinterface
-      verbosity_level: "{{ verbosity_level }}"
+      verbosity: "{{ verbosity_level }}"
     
   - name: Create VM
     azure_rm_virtualmachine:
@@ -152,7 +152,6 @@
     register: azure_virtualmachine
 
   - name: Debug azure_virtualmachine
-    debug: 
+    debug:
       var: azure_virtualmachine
-      verbosity_level: "{{ verbosity_level }}"
-		
+      verbosity: "{{ verbosity_level }}"
