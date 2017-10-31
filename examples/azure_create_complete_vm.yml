@@ -26,8 +26,8 @@
         priority: 1001
         direction: Inbound
     az_networkinterface_name: 'linux_vm_nic'
-    az_virtualmachine_name: 'linux_vm'
-    az_virtualmachine_size: ''
+    az_virtualmachine_name: 'centos7'    
+    az_virtualmachine_size: 'Basic_A0'
     az_admin_username: 'cloud_user'
     az_ssh_password_enabled: 'False'
     az_ssh_public_key: "~/.ssh/cloud_user_id_rsa.pub"
@@ -44,22 +44,32 @@
     stat:
       path: "{{ az_ssh_public_key }}"
     register: id_rsa  
+    tags:
+      - ssh_key
   
   - name: Generate SSH keys
     command: "ssh-keygen -b 2048 -t rsa -f ~/.ssh/{{ az_admin_username }}_id_rsa -q -N ''"
     args:
       creates: ~/.ssh/id_rsa
     when: id_rsa.stat.exists == false
+    tags:
+      - ssh_key
   
   - name: get resource group facts
     azure_rm_resourcegroup_facts:
       name: "{{ az_resource_group }}"
     register: azure_resourcegroup_facts
+    tags:
+      - azure_rm_resourcegroup
+      - azure_rm_resourcegroup_facts
 
   - name: Debug azure_resourcegroup_facts
     debug: 
       var: azure_resourcegroup_facts
       verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_resourcegroup
+      - azure_rm_resourcegroup_facts
 
   - name: create resource group
     azure_rm_resourcegroup:
@@ -67,23 +77,31 @@
       location: "{{ az_location }}"
       state: present
     register: azure_resourcegroup  
+    tags:
+      - azure_rm_resourcegroup
 
   - name: Debug azure_resourcegroup
     debug: 
       var: azure_resourcegroup
-      verbosity: "{{ verbosity_level }}"    
-  
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_resourcegroup
+ 
   - name: Create virtual network
     azure_rm_virtualnetwork:
       resource_group: "{{ az_resource_group }}"
       name: "{{ az_vnet_name }}"
       address_prefixes: "{{ az_vnet_prefixes }}"
     register: azure_virtualnetwork
+    tags:
+      - azure_rm_virtualnetwork
 
   - name: Debug azure_virtualnetwork
     debug: 
       var: azure_virtualnetwork
       verbosity: "{{ verbosity_level }}" 
+    tags:
+      - azure_rm_virtualnetwork
     
   - name: Add subnet
     azure_rm_subnet:
@@ -92,11 +110,15 @@
       address_prefix: "{{ az_subnet_prefix }}"
       virtual_network: "{{ az_vnet_name }}"
     register: azure_subnet
+    tags:
+      - azure_rm_subnet
 
   - name: Debug azure_subnet
     debug: 
       var: azure_subnet
       verbosity: "{{ verbosity_level }}" 
+    tags:
+      - azure_rm_subnet
     
   - name: Create public IP address
     azure_rm_publicipaddress:
@@ -104,11 +126,15 @@
       allocation_method: "{{ az_publicipaddress_method }}"
       name: "{{ az_publicipaddress_name }}"
     register: azure_publicipaddress
+    tags:
+      - azure_rm_publicipaddress
 
   - name: Debug azure_publicipaddress
     debug: 
       var: azure_publicipaddress
       verbosity: "{{ verbosity_level }}"       
+    tags:
+      - azure_rm_publicipaddress
       
   - name: Create Network Security Group that allows SSH
     azure_rm_securitygroup:
@@ -116,11 +142,15 @@
       name: "{{ az_securitygroup_name }}"
       rules: "{{ az_securitygroup_rules }}"
     register: azure_securitygroup
+    tags:
+      - azure_rm_securitygroup
 
   - name: Debug azure_securitygroup
     debug: 
       var: azure_securitygroup
       verbosity: "{{ verbosity_level }}" 
+    tags:
+      - azure_rm_securitygroup
     
   - name: Create virtual network inteface card
     azure_rm_networkinterface:
@@ -131,15 +161,20 @@
       public_ip_name: "{{ az_publicipaddress_name }}"
       security_group: "{{ az_securitygroup_name }}"
     register: azure_networkinterface
+    tags:
+      - azure_rm_networkinterface
 
   - name: Debug azure_networkinterface
     debug: 
       var: azure_networkinterface
       verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_networkinterface
     
   - name: Create VM
     azure_rm_virtualmachine:
       resource_group: "{{ az_resource_group }}"
+      # name: centos7
       name: "{{ az_virtualmachine_name }}"
       vm_size: "{{ az_virtualmachine_size }}"
       admin_username: "{{ az_admin_username }}"
@@ -150,8 +185,12 @@
       network_interfaces: "{{ az_networkinterface_name }}"
       image: "{{ az_image }}"
     register: azure_virtualmachine
+    tags:
+      - azure_rm_virtualmachine
 
   - name: Debug azure_virtualmachine
     debug:
       var: azure_virtualmachine
       verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_virtualmachine

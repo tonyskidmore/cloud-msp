@@ -1,0 +1,30 @@
+---
+# Simple example of tearing down resource group
+
+- name: Delete Azure Resource Group
+  hosts: localhost
+  connection: local
+
+  vars:
+    az_resource_group: ansible-azure-msp
+    verbosity_level: 0
+
+  tasks:
+
+
+  - name: delete resource group
+    azure_rm_resourcegroup:
+      name: "{{ az_resource_group }}"
+      force: yes
+      state: absent
+    register: azure_resourcegroup
+    tags:
+      - azure_resourcegroup
+
+  - name: Debug azure_resourcegroup
+    debug: 
+      var: azure_resourcegroup
+      verbosity: "{{ verbosity_level }}"    
+    tags:
+      - azure_resourcegroup
+
