@@ -30,12 +30,14 @@
     az_virtualmachine_size: 'Basic_A0'
     az_admin_username: 'cloud_user'
     az_ssh_password_enabled: 'False'
+    az_ssh_private_key: "~/.ssh/cloud_user_id_rsa"
     az_ssh_public_key: "~/.ssh/cloud_user_id_rsa.pub"
     az_image:
       offer: CentOS
       publisher: OpenLogic
       sku: '7.3'
       version: latest      
+    create_group: azure_vms
     verbosity_level: 0
 
   tasks:
@@ -194,3 +196,21 @@
       verbosity: "{{ verbosity_level }}"
     tags:
       - azure_rm_virtualmachine
+
+  - name: Create in memory group
+    add_host:
+      name: "{{ azure_publicipaddress.state.ip_address  }}"
+      group: "{{ create_group }}"
+      ansible_user: "{{ az_admin_username }}"
+      ansible_ssh_private_key_file: "{{ az_ssh_private_key }}"
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+    when: create_group is defined
+
+- name: Connect Azure VM
+  hosts: "{{ create_group }}"
+
+  tasks:
+
+  - name: Get azure VM variable
+    debug:
+      var: hostvars[inventory_hostname]
