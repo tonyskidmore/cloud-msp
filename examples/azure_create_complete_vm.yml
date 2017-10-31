@@ -37,7 +37,6 @@
       publisher: OpenLogic
       sku: '7.3'
       version: latest      
-    create_group: azure_vms
     verbosity_level: 0
 
   tasks:
@@ -199,15 +198,14 @@
 
   - name: Create in memory group
     add_host:
-      name: "{{ azure_publicipaddress.state.ip_address  }}"
-      group: "{{ create_group }}"
+      name: "{{ azure_publicipaddress.state.ip_address }}"
+      group: "azure_vms"
       ansible_user: "{{ az_admin_username }}"
       ansible_ssh_private_key_file: "{{ az_ssh_private_key }}"
-      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-    when: create_group is defined
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/nul
 
 - name: Connect Azure VM
-  hosts: "{{ create_group }}"
+  hosts: azure_vms
 
   tasks:
 
