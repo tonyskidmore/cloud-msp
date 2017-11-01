@@ -189,6 +189,12 @@
     tags:
       - azure_rm_virtualmachine
 
+  - name: Set azure_vm facts
+    set_fact:
+      azure_vm_public_ip: "{{ azure_publicipaddress.state.ip_address }}"
+      azure_vm_username: "{{ az_admin_username }}"
+      azure_vm_ssh_private_key: "{{ az_ssh_private_key }}"
+
   - name: Debug azure_virtualmachine
     debug:
       var: azure_virtualmachine
@@ -198,22 +204,28 @@
 
   - name: Create in memory group
     add_host:
-      name: "{{ azure_publicipaddress.state.ip_address }}"
+      name: "{{ azure_vm_public_ip }}"
       group: "azure_vms"
       ansible_user: "{{ az_admin_username }}"
       ansible_ssh_private_key_file: "{{ az_ssh_private_key }}"
       ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
     changed_when: False
 
-- name: Connect Azure VM
+- name: Example connect to Azure VM
   hosts: azure_vms
 
   tasks:
 
-  - name: Get azure VM ansible facts variables
+  - name: Debug azure VM ansible facts variables
     debug:
       var: hostvars[inventory_hostname]
 
+- name: Debug connect message
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+
   - name: Debug SSH connection
     debug:
-      msg: "ssh {{ az_admin_username }}@{{ azure_publicipaddress.state.ip_address }} -i {{ az_ssh_private_key }}"
+      msg: "ssh {{ azure_vm_username }}@{{ azure_vm_public_ip }} -i {{ azure_vm_ssh_private_key }}"

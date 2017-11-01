@@ -1,6 +1,6 @@
 # ansible_modules_complete_vm
 
-This example is based on [Create a complete Linux virtual machine environment in Azure with Ansible](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ansible-create-complete-vm).  
+This example is based on [Create a complete Linux virtual machine environment in Azure with Ansible](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ansible-create-complete-vm).  The Ansible modules are [idempotent](http://docs.ansible.com/ansible/latest/glossary.html#term-idempotency) so that the playbook can be run multiple times.
 
 There are 2 playbooks in this example:
 
@@ -25,4 +25,14 @@ ansible-playbook azure_create_complete_vm.yml
 ansible-playbook azure_delete_complete_vm.yml
 ```
 
+## Variables
+There are multiple variables defined in the ```vars:``` section of the playbooks which are then used during module execution.
 
+# Azure VM SSH Connection
+The last play of the [azure_create_complete_vm.yml]() playbook displays a debug message with the command required to connect to the Azure VM via SSH:
+
+```
+ok: [localhost] => {
+    "msg": "ssh cloud_user@51.141.41.163 -i ~/.ssh/cloud_user_id_rsa"
+}
+```
