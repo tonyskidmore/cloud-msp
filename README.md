@@ -29,9 +29,9 @@ Azure Cloud Shell:
 
 ```sh
 mkdir ~/.virtualenvs
-python -m venv ~/.virtualenvs/ansible-azure-msp
-source ~/.virtualenvs/ansible-azure-msp/bin/activate
-pip install ansible[azure]
+virtualenv ~/.virtualenvs/py3-ansible
+source ~/.virtualenvs/py3-ansible/bin/activate
+pip3 install ansible[azure]
 git clone https://github.com/tonyskidmore/ansible-azure-msp.git
 ```
 ![](images/cloud-shell.gif)
