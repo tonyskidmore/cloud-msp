@@ -11,7 +11,7 @@ azure_delete_complete_vm.yml | Deletes the above resource group and all constitu
 
 ## Prerequisites
 
-Ensure that you have created the necessary Azure credentials that are required by the Ansible Azure modules as described in the [ansible-azure-msp Wiki](https://github.com/tonyskidmore/ansible-azure-msp/wiki/ansible-azure-msp).  
+Ensure that you have created the necessary Azure credentials that are required by the Ansible Azure modules as described in the [cloud-msp Wiki](https://github.com/tonyskidmore/cloud-msp/wiki/cloud-msp).  
 
 ## Playbook execution
 
