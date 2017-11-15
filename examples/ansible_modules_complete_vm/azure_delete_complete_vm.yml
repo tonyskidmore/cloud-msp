@@ -6,7 +6,7 @@
   connection: local
 
   vars:
-    az_resource_group: ansible-azure-msp
+    az_resource_group: cloud-msp-ansible-modules
     verbosity_level: 0
 
   tasks:
