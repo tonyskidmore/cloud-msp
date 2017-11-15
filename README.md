@@ -1,5 +1,5 @@
-# ansible-azure-msp
-> This project is a learning exercise in using Ansible to deploy a Managed Service Provider(MSP) infrastructure lab to Azure
+# cloud-msp
+> This project is a learning exercise to deploy a Managed Service Provider(MSP) components using cloud and automation.
 
 
 
@@ -32,7 +32,7 @@ mkdir ~/.virtualenvs
 virtualenv ~/.virtualenvs/py3-ansible
 source ~/.virtualenvs/py3-ansible/bin/activate
 pip3 install ansible[azure]
-git clone https://github.com/tonyskidmore/ansible-azure-msp.git
+git clone https://github.com/tonyskidmore/cloud-msp.git
 ```
 ![](images/cloud-shell.gif)
 
@@ -74,11 +74,11 @@ another command
 
 ## Contributing
 
-1. Fork it (<https://github.com/tonyskidmore/ansible-azure-msp>)
+1. Fork it (<https://github.com/tonyskidmore/cloud-msp>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
 
 <!-- Markdown link & img dfn's -->
-[wiki]: https://github.com/tonyskidmore/ansible-azure-msp/wiki/ansible-azure-msp
+[wiki]: https://github.com/tonyskidmore/cloud-msp/wiki/ansible-azure-msp
