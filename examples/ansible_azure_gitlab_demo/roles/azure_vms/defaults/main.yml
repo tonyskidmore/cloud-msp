@@ -76,7 +76,7 @@ az_vms:
     # image: "{{ az_images['centos'] }}"
     image: "{{ az_images[0] }}"
     tags:
-      role: ansible
+      'type': 'ansible'
   - name: gitlabvm
     resource_group: "{{ az_resource_group }}"
     vm_size: 'Basic_A0'
@@ -89,6 +89,6 @@ az_vms:
     # image: "{{ az_images['centos'] }}"
     image: "{{ az_images[0] }}"
     tags:
-      role: gitlab
+      'type': 'gitlab'
 
     

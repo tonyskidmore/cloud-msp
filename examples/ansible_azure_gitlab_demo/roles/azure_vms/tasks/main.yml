@@ -108,6 +108,7 @@
         key_data: "{{ lookup('file', az_ssh_public_key) }}"
     network_interfaces: "{{ item.network_interfaces }}"
     image: "{{ item.image }}"
+    append_tags: no
   register: azure_virtualmachines
   with_items: "{{ az_vms }}"
 
