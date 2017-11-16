@@ -1,0 +1,52 @@
+---
+# Simple example of creating a Linux VM
+# based on:
+# Deploy a Virtual Machine with SSH Keys
+# https://github.com/Azure/azure-quickstart-templates/tree/master/101-vm-sshkey
+# and the exampple in:
+# azure_rm_deployment - Create or destroy Azure Resource Manager template deployments
+# http://docs.ansible.com/ansible/latest/azure_rm_deployment_module.html
+
+- name: Create Azure VM using ARM
+  hosts: localhost
+  connection: local
+  
+  vars:
+    az_admin_username: 'cloud_user'
+    az_resource_group: cloud-msp-101-vm-sshkey
+    az_ssh_private_key: "~/.ssh/cloud_user_id_rsa"
+    az_ssh_public_key: "~/.ssh/cloud_user_id_rsa.pub"
+    az_template_link: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-sshkey/azuredeploy.json'
+
+  tasks:
+
+  - name: Run stat of public key
+    stat:
+      path: "{{ az_ssh_public_key }}"
+    register: id_rsa
+    tags:
+      - ssh_key
+
+  - name: Generate SSH keys
+    command: "ssh-keygen -b 2048 -t rsa -f ~/.ssh/{{ az_admin_username }}_id_rsa -q -N ''"
+    args:
+      creates: ~/.ssh/id_rsa
+    when: id_rsa.stat.exists == false
+    tags:
+      - ssh_key  
+
+  - name: Create Azure Deploy
+    azure_rm_deployment:
+      state: present
+      resource_group_name: "{{ az_resource_group }}"
+      parameters:
+        adminUsername:
+          value: "{{ az_admin_username }}"
+        sshKeyData:
+          value: "{{ lookup('file', az_ssh_public_key) }}"
+      template_link: "{{ az_template_link }}"
+    register: azure_rm_deployment
+
+  - name: Debug azure_rm_deployment
+    debug:
+      var: azure_rm_deployment

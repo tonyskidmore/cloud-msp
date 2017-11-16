@@ -1,0 +1,31 @@
+---
+# Simple example of creating a Linux VM
+# based on:
+# Deploy a Virtual Machine with SSH Keys
+# https://github.com/Azure/azure-quickstart-templates/tree/master/101-vm-sshkey
+# and the exampple in:
+# azure_rm_deployment - Create or destroy Azure Resource Manager template deployments
+# http://docs.ansible.com/ansible/latest/azure_rm_deployment_module.html
+
+- name: Delete Azure VM using ARM
+  hosts: localhost
+  connection: local
+  
+  vars:
+    az_resource_group: cloud-msp-101-vm-sshkey
+    az_template_link: 'https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/101-vm-sshkey/azuredeploy.json'
+
+  tasks:
+
+  - name: Delete Azure Deploy
+    azure_rm_deployment:
+      state: absent
+      resource_group_name: "{{ az_resource_group }}"
+      template_link: "{{ az_template_link }}"
+    register: azure_rm_deletion
+
+  - name: Debug azure_rm_deletion
+    debug:
+      var: azure_rm_deletion
+
+   
