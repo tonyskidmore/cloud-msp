@@ -1,4 +1,4 @@
-# ansible_modules_complete_vm
+# ansible_azure_101_vm_sshkey_arm
 
 This example is based on the Azure Quickstart Template[Deploy a Virtual Machine with SSH Keys](https://github.com/Azure/azure-quickstart-templates/tree/master/101-vm-sshkey
 ).  The Ansible [azure_rm_deployment](http://docs.ansible.com/ansible/latest/azure_rm_deployment_module.html) shows the following example:  
