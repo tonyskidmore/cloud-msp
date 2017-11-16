@@ -61,6 +61,7 @@ az_networkinterfaces:
     virtual_network: "{{ az_virtualnetworks[0].name }}"
     subnet: "{{ az_subnets[0].name }}"
     public_ip_name: "{{ az_public_ips[1].name }}"
+    security_group: "{{ az_securitygroup_name }}"
 
 az_vms:
   - name: ansiblevm
@@ -74,6 +75,8 @@ az_vms:
     network_interfaces: "{{ az_networkinterfaces[0].name }}"
     # image: "{{ az_images['centos'] }}"
     image: "{{ az_images[0] }}"
+    tags:
+      role: ansible
   - name: gitlabvm
     resource_group: "{{ az_resource_group }}"
     vm_size: 'Basic_A0'
@@ -85,5 +88,7 @@ az_vms:
     network_interfaces: "{{ az_networkinterfaces[1].name }}"
     # image: "{{ az_images['centos'] }}"
     image: "{{ az_images[0] }}"
+    tags:
+      role: gitlab
 
     
