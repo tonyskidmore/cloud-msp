@@ -1,0 +1,8 @@
+---
+- name: Testing
+  hosts: localhost
+  connection: local
+
+  roles:
+
+  - role: azure_vms

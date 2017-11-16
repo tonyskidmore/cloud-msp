@@ -1,0 +1,5 @@
+---
+- name: Debug Azure VMs
+  debug:
+    var: "{{ item }}"
+  with_items: "{{ az_vms }}"
