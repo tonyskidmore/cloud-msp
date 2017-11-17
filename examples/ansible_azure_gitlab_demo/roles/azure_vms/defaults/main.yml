@@ -30,7 +30,7 @@ az_public_ips:
   - name: cloud-msp-gitlab-demo-ansible-publicip
     allocation_method: "{{ az_publicipaddress_method }}"
     resource_group: "{{ az_resource_group }}"
-  - name: cloud-msp-gitlab-demo-gitlab-public-ip
+  - name: cloud-msp-gitlab-demo-gitlab-publicip
     allocation_method: "{{ az_publicipaddress_method }}"
     resource_group: "{{ az_resource_group }}"
 
