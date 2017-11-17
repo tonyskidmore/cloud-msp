@@ -22,7 +22,7 @@
   hosts: localhost
   gather_facts: False
 
-  pre_tasks:
+  tasks:
 
   - name: get roles using ansible-galaxy
     command: ansible-galaxy install -r roles/requirements.yml -p ./roles/ --force
@@ -31,9 +31,13 @@
     tags:
       - roles
 
+
 - name: Deploy GitLab
   hosts: gitlabvm
   gather_facts: False
+
+  vars:
+    gitlab_role: ansible-role-gitlab
 
   pre_tasks:
 
@@ -52,9 +56,10 @@
       var: hostvars[inventory_hostname]
 
   roles:
-
+  
   - name: deploy gitlab
-    role: gitlab-role
+    role: "{{ ansible-role-gitlab }}"
+    when: ansible-role-gitlab != ""
     tags:
       - gitlab
       - deploy
