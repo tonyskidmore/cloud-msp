@@ -7,12 +7,27 @@
 
   - role: azure_vms
 
+  post_tasks:
+
+  - name: refresh the inventory
+    meta: refresh_inventory
+
 - name: Testing Access
   hosts: azure
+  gather_facts: False
 
   tasks:
 
+  - name: wait for VMs
+    wait_for:
+      timeout: 300
+    delegate_to: localhost
+
+  - name: now gather facts
+    setup:
+
   - name: debug some variable
     debug:
-      var: hostvars[inventory_hostname]['ansible_os_family']
+      # var: hostvars[inventory_hostname]['ansible_os_family']
+      var: hostvars[inventory_hostname]
 
