@@ -1,0 +1,21 @@
+---
+- src: https://github.com/geerlingguy/ansible-role-gitlab.git
+  scm: git
+  name: ansible-roles-gitlab
+
+- src: https://github.com/geerlingguy/ansible-role-docker.git 
+  scm: git
+  name: ansible-role-docker
+
+- src: https://github.com/geerlingguy/ansible-role-repo-epel.git
+  scm: git
+  name: ansible-role-repo-epe
+
+- src: https://github.com/geerlingguy/ansible-role-nodejs.git
+  scm: git
+  name: ansible-role-nodejs
+
+- src: https://github.com/geerlingguy/ansible-role-awx.git
+  scm: git
+  name: ansible-role-awx
+

@@ -5,29 +5,57 @@
 
   roles:
 
-  - role: azure_vms
+  - name: azure VM provisioning
+    role: azure_vms
+    tags:
+      - azure
+      - provision
 
   post_tasks:
 
   - name: refresh the inventory
     meta: refresh_inventory
+    tags:
+      - inventory
 
-- name: Testing Access
-  hosts: azure
+- name: Download Ansible Roles
+  hosts: localhost
   gather_facts: False
 
-  tasks:
+  pre_tasks:
+
+  - name: get roles using ansible-galaxy
+    command: ansible-galaxy install -r roles/requirements.yml -p ./roles/ --force
+    register: azure_gitlab_lab_roles
+    delegate_to: localhost
+    tags:
+      - roles
+
+- name: Deploy GitLab
+  hosts: gitlabvm
+  gather_facts: False
+
+  pre_tasks:
 
   - name: wait for VMs
-    wait_for:
+    wait_for_connection:
       timeout: 300
-    delegate_to: localhost
 
   - name: now gather facts
     setup:
+    tags:
+      - facts
 
   - name: debug some variable
     debug:
       # var: hostvars[inventory_hostname]['ansible_os_family']
       var: hostvars[inventory_hostname]
+
+  roles:
+
+  - name: deploy gitlab
+    role: gitlab-role
+    tags:
+      - gitlab
+      - deploy
 
