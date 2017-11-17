@@ -1,2 +1,2 @@
-!roles/*
+!roles/ansible-role*
 roles/*/

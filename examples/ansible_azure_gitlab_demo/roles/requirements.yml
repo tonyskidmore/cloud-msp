@@ -1,7 +1,7 @@
 ---
 - src: https://github.com/geerlingguy/ansible-role-gitlab.git
   scm: git
-  name: ansible-roles-gitlab
+  name: ansible-role-gitlab
 
 - src: https://github.com/geerlingguy/ansible-role-docker.git 
   scm: git
