@@ -35,6 +35,7 @@
 - name: Deploy GitLab
   hosts: gitlabvm
   gather_facts: False
+  become: yes
 
   vars:
     gitlab_role: ansible-role-gitlab
@@ -44,23 +45,96 @@
   - name: wait for VMs
     wait_for_connection:
       timeout: 300
+    tags:
+      - gitlab
 
   - name: now gather facts
     setup:
     tags:
       - facts
+      - gitlab
 
   - name: debug some variable
     debug:
       # var: hostvars[inventory_hostname]['ansible_os_family']
-      var: hostvars[inventory_hostname]
+      var: hostvars[inventory_hostname]['ansible_os_family']
+    tags:
+      - gitlab
 
   roles:
   
   - name: deploy gitlab
-    role: "{{ ansible-role-gitlab }}"
-    when: ansible-role-gitlab != ""
+    role: "{{ gitlab_role }}"
+    when: gitlab_role != ""
     tags:
       - gitlab
       - deploy
 
+- name: Deploy AWX
+  hosts: gitlabvm
+  gather_facts: False
+  become: yes
+
+  vars:
+    ansible_role: ansible-role-ansible  
+    docker_role: ansible-role-docker  
+    pip_role: ansible-role-pip       
+    awx_role: ansible-role-awx      
+    git_role: ansible-role-git     
+    nodejs_role: ansible-role-nodejs  
+    epel_role: ansible-role-repo-epel
+
+    nodejs_version: "6.x"
+    pip_install_packages:
+      - name: docker-py
+
+  roles:
+
+  - name: configure epel repo
+    role: "{{ epel_role }}"
+    when: epel_role != ""
+    tags:
+      - epel
+      - deploy
+
+  - name: install git
+    role: "{{ git_role }}"
+    when: git_role != ""
+    tags:
+      - git
+      - deploy
+
+  - name: install ansible
+    role: "{{ ansible_role }}"
+    when: ansible_role != ""
+    tags:
+      - ansible
+      - deploy
+
+  - name: install docker
+    role: "{{ docker_role }}"
+    when: docker_role != ""
+    tags:
+      - docker
+      - deploy
+
+  - name: install pip
+    role: "{{ pip_role }}"
+    when: pip_role != ""
+    tags:
+      - pip
+      - deploy
+
+  - name: install nodejs
+    role: "{{ nodejs_role }}"
+    when: nodejs_role != ""
+    tags:
+      - nodejs
+      - deploy
+
+  - name: install awx
+    role: "{{ awx_role }}"
+    when: awx_role != ""
+    tags:
+      - awx
+      - deploy

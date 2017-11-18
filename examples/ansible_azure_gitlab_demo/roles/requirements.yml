@@ -9,11 +9,23 @@
 
 - src: https://github.com/geerlingguy/ansible-role-repo-epel.git
   scm: git
-  name: ansible-role-repo-epe
+  name: ansible-role-repo-epel
 
 - src: https://github.com/geerlingguy/ansible-role-nodejs.git
   scm: git
   name: ansible-role-nodejs
+
+- src: https://github.com/geerlingguy/ansible-role-ansible.git
+  scm: git
+  name: ansible-role-ansible
+
+- src: https://github.com/geerlingguy/ansible-role-git.git
+  scm: git
+  name: ansible-role-git
+
+- src: https://github.com/geerlingguy/ansible-role-pip.git
+  scm: git
+  name: ansible-role-pip
 
 - src: https://github.com/geerlingguy/ansible-role-awx.git
   scm: git

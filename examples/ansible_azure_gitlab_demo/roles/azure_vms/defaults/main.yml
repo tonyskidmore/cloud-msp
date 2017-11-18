@@ -66,7 +66,8 @@ az_networkinterfaces:
 az_vms:
   - name: ansiblevm
     resource_group: "{{ az_resource_group }}"
-    vm_size: 'Basic_A0'
+    # vm_size: 'Basic_A0'
+    vm_size: 'Standard_A2'
     admin_username: "{{ az_admin_username }}"
     ssh_password_enabled: "{{ az_ssh_password_enabled }}"
     ssh_public_keys:
@@ -79,7 +80,8 @@ az_vms:
       role: 'ansible'
   - name: gitlabvm
     resource_group: "{{ az_resource_group }}"
-    vm_size: 'Basic_A0'
+    # vm_size: 'Basic_A0'
+    vm_size: 'Standard_A2'
     admin_username: "{{ az_admin_username }}"
     ssh_password_enabled: "{{ az_ssh_password_enabled }}"
     ssh_public_keys:
