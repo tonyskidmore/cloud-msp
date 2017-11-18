@@ -1,6 +1,6 @@
 ---
 awx_external_hostname: awxdemo
-awx_fqdn: "{{ awx_external_hostname }}{{ cloud_domain }}"
+awx_fqdn: "{{ awx_external_hostname }}.{{ cloud_domain }}"
 nodejs_version: "6.x"
 pip_install_packages:
   - name: docker-py

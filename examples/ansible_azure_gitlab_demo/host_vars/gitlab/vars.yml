@@ -1,6 +1,6 @@
 ---
 gitlab_external_hostname: gitlabdemo
-gitlab_fqdn: "{{ gitlab_external_hostname }}{{ cloud_domain }}"
+gitlab_fqdn: "{{ gitlab_external_hostname }}.{{ cloud_domain }}"
 gitlab_external_url: "https://{{ gitlab_fqdn }}/"
 gitlab_self_signed_cert_subj: "/C=US/ST=IL/L=Chicago/O=IT/CN={{ gitlab_fqdn }}"
 
