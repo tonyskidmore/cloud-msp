@@ -1,4 +1,4 @@
-# ansible-azure-msp examples
+# cloud-msp examples
 
 In the table below we provide basic information as to what the example provides.  Refere to the README.md file in the examples directory for further details.
 
