@@ -1,6 +1,6 @@
 ---
 - name: Deploy AWX
-  hosts: ansiblevm
+  hosts: ansible
   gather_facts: False
   become: yes
 

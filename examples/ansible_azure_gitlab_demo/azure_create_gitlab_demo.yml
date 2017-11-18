@@ -18,27 +18,10 @@
     tags:
       - inventory
 
-- name: Download Ansible Roles
-  hosts: localhost
-  gather_facts: False
-
-  tasks:
-
-  - name: get roles using ansible-galaxy
-    command: ansible-galaxy install -r roles/requirements.yml -p ./roles/ --force
-    register: azure_gitlab_lab_roles
-    delegate_to: localhost
-    tags:
-      - roles
-
-
 - name: Deploy GitLab
-  hosts: gitlabvm
+  hosts: gitlab
   gather_facts: False
   become: yes
-
-  vars:
-    gitlab_role: ansible-role-gitlab
 
   pre_tasks:
 
@@ -56,17 +39,52 @@
 
   - name: debug some variable
     debug:
-      # var: hostvars[inventory_hostname]['ansible_os_family']
       var: hostvars[inventory_hostname]['ansible_os_family']
+      verbosity: "{{ verbosity_level }}"
     tags:
       - gitlab
 
   roles:
   
   - name: deploy gitlab
-    role: "{{ gitlab_role }}"
-    when: gitlab_role != ""
+    role: ansible-role-gitlab
     tags:
       - gitlab
       - deploy
 
+- name: Deploy AWX
+  hosts: ansible
+  gather_facts: False
+  become: yes
+
+  pre_tasks:
+
+  - name: wait for VMs
+    wait_for_connection:
+      timeout: 300
+
+  - name: now gather facts
+    setup:
+
+  roles:
+
+  - name: configure epel repo
+    role: ansible-role-repo-epel 
+
+  - name: install git
+    role: ansible-role-git
+
+  - name: install ansible
+    role: ansible-role-ansible
+
+  - name: install docker
+    role: ansible-role-docker
+
+  - name: install pip
+    role: ansible-role-pip
+
+  - name: install nodejs
+    role: ansible-role-nodejs
+
+  - name: install awx
+    role: ansible-role-awx

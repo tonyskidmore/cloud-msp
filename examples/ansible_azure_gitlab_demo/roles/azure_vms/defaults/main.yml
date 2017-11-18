@@ -42,11 +42,17 @@ az_securitygroup_rules:
     access: Allow
     priority: 1001
     direction: Inbound
+  - name: HTTP
+    protocol: Tcp
+    destination_port_range: 80
+    access: Allow
+    priority: 1002
+    direction: Inbound
   - name: HTTPS
     protocol: Tcp
     destination_port_range: 443
     access: Allow
-    priority: 1002
+    priority: 1003
     direction: Inbound
 
 az_networkinterfaces:
@@ -64,7 +70,7 @@ az_networkinterfaces:
     security_group: "{{ az_securitygroup_name }}"
 
 az_vms:
-  - name: ansiblevm
+  - name: ansible
     resource_group: "{{ az_resource_group }}"
     # vm_size: 'Basic_A0'
     vm_size: 'Standard_A2'
@@ -78,7 +84,7 @@ az_vms:
     image: "{{ az_images[0] }}"
     tags:
       role: 'ansible'
-  - name: gitlabvm
+  - name: gitlab
     resource_group: "{{ az_resource_group }}"
     # vm_size: 'Basic_A0'
     vm_size: 'Standard_A2'
