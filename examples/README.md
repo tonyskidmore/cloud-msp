@@ -1,6 +1,6 @@
 # cloud-msp examples
 
-In the table below we provide basic information as to what the example provides.  Refere to the README.md file in the examples directory for further details.
+In the table below we provide basic information as to what the examples provide.  Refer to the README.md file in the examples directory for further details.
 
 Cloud|Tool|Example | Description
 ------------ | -------------|------------ | -------------
