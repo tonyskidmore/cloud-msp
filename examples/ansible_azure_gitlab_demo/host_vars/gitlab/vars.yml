@@ -2,5 +2,15 @@
 gitlab_external_hostname: gitlabdemo
 gitlab_fqdn: "{{ gitlab_external_hostname }}.{{ cloud_domain }}"
 gitlab_external_url: "https://{{ gitlab_fqdn }}/"
+
+gitlab_create_self_signed_cert: "false"
 gitlab_self_signed_cert_subj: "/C=US/ST=IL/L=Chicago/O=IT/CN={{ gitlab_fqdn }}"
 
+gitlab_ssl_certificate: "/etc/gitlab/ssl/gitlab_demo.crt"
+gitlab_ssl_certificate_key: "/etc/gitlab/ssl/gitlab_demo.key"
+gitlab_copy_certs: "true"
+gitlab_certs:
+  - src: "/certs/fullchain.pem"
+    dest: "/etc/gitlab/ssl/gitlab_demo.crt"
+  - src: "/certs/privkey.pem"
+    dest: "/etc/gitlab/ssl/gitlab_demo.key"
