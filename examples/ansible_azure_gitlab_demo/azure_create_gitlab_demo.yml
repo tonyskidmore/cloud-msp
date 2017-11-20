@@ -2,6 +2,8 @@
 - name: Testing
   hosts: localhost
   connection: local
+  tags:
+    - azure
 
   roles:
 
@@ -16,12 +18,15 @@
   - name: refresh the inventory
     meta: refresh_inventory
     tags:
+      - azure
       - inventory
 
 - name: Deploy GitLab
   hosts: gitlab
   gather_facts: False
   become: yes
+  tags:
+    - gitlab
 
   pre_tasks:
 
@@ -77,6 +82,8 @@
   hosts: ansible
   gather_facts: False
   become: yes
+  tags:
+    - awx
 
   pre_tasks:
 
@@ -127,3 +134,24 @@
     role: ansible-role-awx
     tags:
       - awx
+
+- name: Deploy AWX
+  hosts: jumphost
+  gather_facts: False
+  become: yes
+  tags:
+    - jumphost
+
+  pre_tasks:
+
+  - name: wait for VMs
+    wait_for_connection:
+      timeout: 300
+    tags:
+      - jumphost
+
+  - name: now gather facts
+    setup:
+    tags:
+      - jumphost
+
