@@ -135,7 +135,7 @@
     tags:
       - awx
 
-- name: Deploy AWX
+- name: Deploy jumphost
   hosts: jumphost
   gather_facts: False
   become: yes
@@ -155,3 +155,16 @@
     tags:
       - jumphost
 
+  roles:
+
+  - name: configure jumphost
+    role: jumphost
+    tags:
+      - jumphost
+      - deploy
+  
+  - name: deploy gitlab
+    role: ansible-role-apache
+    tags:
+      - jumphost
+      - apache

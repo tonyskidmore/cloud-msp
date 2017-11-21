@@ -31,3 +31,7 @@
   scm: git
   name: ansible-role-awx
 
+- src: https://github.com/tonyskidmore/ansible-role-apache.git
+  scm: git
+  name: ansible-role-apache
+
