@@ -1,0 +1,15 @@
+---
+jumphost_pwsh_repo_name: packages-microsoft-com-prod
+jumphost_pwsh_repo_file: microsoft
+jumphost_pwsh_repo_desc: packages-microsoft-com-prod
+jumphost_pwsh_repo_baseurl: https://packages.microsoft.com/rhel/7/prod/
+jumphost_pwsh_repo_enabled: yes
+jumphost_pwsh_repo_gpgcheck: yes
+jumphost_pwsh_repo_gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+
+jumphost_packages:
+  - git
+  - vim
+  - powershell
+  - gcc
+

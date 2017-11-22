@@ -1,0 +1,57 @@
+---
+
+- name: Get starting kernel version
+  shell:
+    rpm -q kernel --queryformat '%{installtime} %{version}-%{release}.%{arch}\n' | sort -n -k1 | tail -1 | cut -d ' ' -f 2
+  args:
+    warn: no
+  ignore_errors: true
+  register: system_update_start_kernel
+  changed_when: false
+
+- name: Debug kernel version
+  debug:
+    var: system_update_start_kernel.stdout
+    verbosity:  "{{ verbosity_level }}"
+
+- name: Perform system update
+  yum:
+    name: "*"
+    state: latest
+    update_cache: yes
+  register: system_update_packages
+  become: true
+  ignore_errors: True
+
+- name: Debug yum result
+  debug:
+    var: system_update_packages
+    verbosity: "{{ verbosity_level }}"
+
+- name: Get ending kernel version
+  shell:
+    rpm -q kernel --queryformat '%{installtime} %{version}-%{release}.%{arch}\n' | sort -n -k1 | tail -1 | cut -d ' ' -f 2
+  args:
+    warn: no
+  ignore_errors: true
+  register: system_update_end_kernel
+  changed_when: false
+
+- name: Restart Server
+  shell: sleep 2 && shutdown -r now "Reboot triggered by Ansible"
+  async: 1
+  poll: 0
+  become: true
+  when: system_update_start_kernel.stdout != system_update_end_kernel.stdout
+  register: system_update_restart_server
+  ignore_errors: true
+
+- name: Debug Restart Server
+  debug:
+    var: system_update_restart_server
+    verbosity: "{{ verbosity_level }}"
+
+- name: Wait For Server
+  wait_for_connection:
+    timeout: 300
+  when: system_update_start_kernel.stdout != system_update_end_kernel.stdout
