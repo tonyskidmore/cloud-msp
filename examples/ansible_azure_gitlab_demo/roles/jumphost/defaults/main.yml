@@ -12,4 +12,5 @@ jumphost_packages:
   - vim
   - powershell
   - gcc
+  - putty
 

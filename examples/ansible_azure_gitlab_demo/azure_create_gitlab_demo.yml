@@ -163,6 +163,11 @@
       - jumphost
       - update
 
+  - name: configure epel repo
+    role: ansible-role-repo-epel 
+    tags:
+      - jumphost
+
   - name: configure jumphost
     role: jumphost
     tags:
