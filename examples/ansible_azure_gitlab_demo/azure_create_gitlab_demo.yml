@@ -157,13 +157,19 @@
 
   roles:
 
+  - name: perform a system update
+    role: system-update
+    tags:
+      - jumphost
+      - update
+
   - name: configure jumphost
     role: jumphost
     tags:
       - jumphost
       - deploy
   
-  - name: deploy gitlab
+  - name: deploy apache
     role: ansible-role-apache
     tags:
       - jumphost
