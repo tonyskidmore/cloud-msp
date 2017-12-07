@@ -7,4 +7,4 @@ examples/ansible_azure_gitlab_demo/roles/ansible-role-gitlab/
 examples/ansible_azure_gitlab_demo/roles/ansible-role-nodejs/
 examples/ansible_azure_gitlab_demo/roles/ansible-role-pip/
 examples/ansible_azure_gitlab_demo/roles/ansible-role-repo-epel/
-
+.vs/
