@@ -52,6 +52,6 @@ There are many variables defined in the individual roles, group_vars and host_va
 
 The following were issues I encountered during this deployment (Ansible 2.4.1.0 at time of development):
 
-- [azure_rm_virtualmachine](http://docs.ansible.com/ansible/latest/azure_rm_virtualmachine_module.html) tags didn't seem to work.  Although there were no errors after viewing the VMs in the [Microsft Azure Portal](https://portal.azure.com) the specified tags were not created.
+- [azure_rm_virtualmachine](http://docs.ansible.com/ansible/latest/azure_rm_virtualmachine_module.html) tags didn't seem to work.  Although there were no errors after viewing the VMs in the [Microsoft Azure Portal](https://portal.azure.com) the specified tags were not created.
 
 - [azure_rm_dnsrecordset](http://docs.ansible.com/ansible/latest/azure_rm_dnsrecordset_module.html) did not work at all, received a TypeError when trying to run a playbook when using this module.  I have to do some more testing on that and maybe raise an issue.
