@@ -1,0 +1,56 @@
+---
+- name: Deploy AWX
+  hosts: ansible
+  gather_facts: False
+  become: yes
+
+  vars:
+    ansible_role: ansible-role-ansible
+    docker_role: ansible-role-docker
+    pip_role: ansible-role-pip
+    awx_role: ansible-role-awx
+    git_role: ansible-role-git
+    nodejs_role: ansible-role-nodejs
+    epel_role: ansible-role-repo-epel
+    nodejs_version: "6.x"
+    pip_install_packages:
+      - name: docker-py
+
+  pre_tasks:
+
+  - name: wait for VMs
+    wait_for_connection:
+      timeout: 300
+
+  - name: now gather facts
+    setup:
+
+  roles:
+
+  - name: configure epel repo
+    role: "{{ epel_role }}"
+    when: epel_role != ""
+
+  - name: install git
+    role: "{{ git_role }}"
+    when: git_role != ""
+
+  - name: install ansible
+    role: "{{ ansible_role }}"
+    when: ansible_role != ""
+
+  - name: install docker
+    role: "{{ docker_role }}"
+    when: docker_role != ""
+
+  - name: install pip
+    role: "{{ pip_role }}"
+    when: pip_role != ""
+
+  - name: install nodejs
+    role: "{{ nodejs_role }}"
+    when: nodejs_role != ""
+
+  - name: install awx
+    role: "{{ awx_role }}"
+    when: awx_role != ""

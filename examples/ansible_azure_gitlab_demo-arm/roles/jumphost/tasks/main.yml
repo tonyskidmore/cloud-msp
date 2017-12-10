@@ -1,0 +1,31 @@
+---
+
+- name: enable powershell yum repo
+  yum_repository:
+    state: present
+    name: "{{ jumphost_pwsh_repo_name }}"
+    file: "{{ jumphost_pwsh_repo_file }}"
+    description: "{{ jumphost_pwsh_repo_desc }}"
+    baseurl: "{{ jumphost_pwsh_repo_baseurl }}"
+    enabled: "{{ jumphost_pwsh_repo_enabled }}"
+    gpgcheck: "{{ jumphost_pwsh_repo_gpgcheck }}"
+    gpgkey: "{{ jumphost_pwsh_repo_gpgkey }}"
+
+- name: install packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ jumphost_packages }}"
+
+- name: create hosts file entry
+  lineinfile:
+    path: /etc/hosts
+    state: present
+    line: "{{ hostvars['gitlab']['private_ip'] }}\t{{ gitlab_external_url }}"
+    regexp: "^.*{{ gitlab_external_url }}"
+    owner: root
+    group: root
+    mode: 0644    
+
+

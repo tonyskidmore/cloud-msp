@@ -1,0 +1,37 @@
+---
+- src: https://github.com/tonyskidmore/ansible-role-gitlab.git
+  scm: git
+  name: ansible-role-gitlab
+
+- src: https://github.com/tonyskidmore/ansible-role-docker.git 
+  scm: git
+  name: ansible-role-docker
+
+- src: https://github.com/tonyskidmore/ansible-role-repo-epel.git
+  scm: git
+  name: ansible-role-repo-epel
+
+- src: https://github.com/tonyskidmore/ansible-role-nodejs.git
+  scm: git
+  name: ansible-role-nodejs
+
+- src: https://github.com/tonyskidmore/ansible-role-ansible.git
+  scm: git
+  name: ansible-role-ansible
+
+- src: https://github.com/tonyskidmore/ansible-role-git.git
+  scm: git
+  name: ansible-role-git
+
+- src: https://github.com/tonyskidmore/ansible-role-pip.git
+  scm: git
+  name: ansible-role-pip
+
+- src: https://github.com/tonyskidmore/ansible-role-awx.git
+  scm: git
+  name: ansible-role-awx
+
+- src: https://github.com/tonyskidmore/ansible-role-apache.git
+  scm: git
+  name: ansible-role-apache
+

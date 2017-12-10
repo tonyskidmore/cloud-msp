@@ -1,0 +1,181 @@
+---
+- name: Testing
+  hosts: localhost
+  connection: local
+  tags:
+    - azure
+
+  roles:
+
+  - name: azure VM provisioning
+    role: azure_vms
+    tags:
+      - azure
+      - provision
+
+  post_tasks:
+
+  - name: refresh the inventory
+    meta: refresh_inventory
+    tags:
+      - azure
+      - inventory
+
+- name: Deploy GitLab
+  hosts: gitlab
+  gather_facts: False
+  become: yes
+  tags:
+    - gitlab
+
+  pre_tasks:
+
+  - name: wait for VMs
+    wait_for_connection:
+      timeout: 300
+    tags:
+      - gitlab
+
+  - name: now gather facts
+    setup:
+    tags:
+      - facts
+      - gitlab
+
+  - name: debug some variable
+    debug:
+      var: hostvars[inventory_hostname]['ansible_os_family']
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - gitlab
+
+  - name: create certificate path
+    file:
+      state: directory
+      path: "{{ item.dest | dirname }}"
+    with_items: "{{ gitlab_certs }}"
+
+  - name: copy certs
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      # owner: gitlab
+      # group: gitlab
+      # mode: 0600
+    with_items: "{{ gitlab_certs }}"
+    when: 
+      - gitlab_copy_certs is defined
+      - gitlab_copy_certs
+    tags:
+      - gitlab
+      - certs
+
+  roles:
+  
+  - name: deploy gitlab
+    role: ansible-role-gitlab
+    tags:
+      - gitlab
+      - deploy
+
+- name: Deploy AWX
+  hosts: ansible
+  gather_facts: False
+  become: yes
+  tags:
+    - awx
+
+  pre_tasks:
+
+  - name: wait for VMs
+    wait_for_connection:
+      timeout: 300
+    tags:
+      - awx
+
+  - name: now gather facts
+    setup:
+    tags:
+      - awx
+
+  roles:
+
+  - name: configure epel repo
+    role: ansible-role-repo-epel 
+    tags:
+      - awx
+
+  - name: install git
+    role: ansible-role-git
+    tags:
+      - awx
+
+  - name: install ansible
+    role: ansible-role-ansible
+    tags:
+      - awx
+
+  - name: install docker
+    role: ansible-role-docker
+    tags:
+      - awx
+
+  - name: install pip
+    role: ansible-role-pip
+    tags:
+      - awx
+
+  - name: install nodejs
+    role: ansible-role-nodejs
+    tags:
+      - awx
+
+  - name: install awx
+    role: ansible-role-awx
+    tags:
+      - awx
+
+- name: Deploy jumphost
+  hosts: jumphost
+  gather_facts: False
+  become: yes
+  tags:
+    - jumphost
+
+  pre_tasks:
+
+  - name: wait for VMs
+    wait_for_connection:
+      timeout: 300
+    tags:
+      - jumphost
+
+  - name: now gather facts
+    setup:
+    tags:
+      - jumphost
+
+  roles:
+
+  - name: perform a system update
+    role: system-update
+    tags:
+      - jumphost
+      - update
+
+  - name: configure epel repo
+    role: ansible-role-repo-epel 
+    tags:
+      - jumphost
+
+  - name: configure jumphost
+    role: jumphost
+    tags:
+      - jumphost
+      - deploy
+  
+  - name: deploy apache
+    role: ansible-role-apache
+    tags:
+      - jumphost
+      - apache

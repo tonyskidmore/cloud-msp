@@ -1,0 +1,5 @@
+---
+gitlab_external_hostname: gitlabdemo
+gitlab_fqdn: "{{ gitlab_external_hostname }}.{{ cloud_domain }}"
+gitlab_external_url: "https://{{ gitlab_fqdn }}/"
+

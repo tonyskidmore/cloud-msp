@@ -1,0 +1,159 @@
+---
+- name: create .ssh directory
+  file:
+    path: "{{ ansible_user_dir }}/.ssh"
+    state: directory
+    mode: 0700
+
+- name: run stat of root public key
+  stat:
+    path: "{{ az_ssh_public_key }}"
+  register: id_rsa  
+  
+- name: generate SSH keys
+  command: "ssh-keygen -b 2048 -t rsa -f ~/.ssh/{{ az_admin_username }}_id_rsa -q -N ''"
+  args:
+    creates: ~/.ssh/id_rsa
+  when: id_rsa.stat.exists == false
+
+- name: create resource group
+  azure_rm_resourcegroup:
+    name: "{{ az_resource_group }}"
+    location: "{{ az_location }}"
+    state: present
+  register: azure_resourcegroup
+
+- name: debug azure_resourcegroup
+  debug: 
+    var: azure_resourcegroup
+    verbosity: "{{ verbosity_level }}"
+
+- name: create virtual networks
+  azure_rm_virtualnetwork:
+    resource_group: "{{ item.resource_group }}"
+    name: "{{ item.name }}"
+    address_prefixes: "{{ item.address_prefixes }}"
+  register: azure_virtualnetworks
+  with_items: "{{ az_virtualnetworks }}"
+
+- name: debug azure_virtualnetworks
+  debug:
+    var: azure_virtualnetworks
+    verbosity: "{{ verbosity_level }}"
+
+- name: add subnets
+  azure_rm_subnet:
+    resource_group: "{{ item.resource_group }}"
+    name: "{{ item.name }}"
+    address_prefix: "{{ item.address_prefix }}"
+    virtual_network: "{{ item.virtual_network }}"
+  register: azure_subnets
+  with_items: "{{ az_subnets }}"
+
+- name: debug azure_subnets
+  debug: 
+    var: azure_subnets
+    verbosity: "{{ verbosity_level }}"
+
+- name: create public IP addresses
+  azure_rm_publicipaddress:
+    resource_group: "{{ item.resource_group }}"
+    allocation_method: "{{ item.allocation_method }}"
+    name: "{{ item.name }}"
+  register: azure_publicipaddresses
+  with_items: "{{ az_public_ips }}"
+
+- name: debug azure_publicipaddresses
+  debug:
+    var: azure_publicipaddresses
+    verbosity: "{{ verbosity_level }}"
+
+- name: create network security groups
+  azure_rm_securitygroup:
+    resource_group: "{{ az_resource_group }}"
+    name: "{{ az_securitygroup_name }}"
+    rules: "{{ az_securitygroup_rules }}"
+  register: azure_securitygroups
+
+- name: debug azure_securitygroups
+  debug:
+    var: azure_securitygroups
+    verbosity: "{{ verbosity_level }}"
+
+- name: create virtual network interface cards
+  azure_rm_networkinterface:
+    resource_group: "{{ item.resource_group }}"
+    name: "{{ item.name }}"
+    virtual_network: "{{ item.virtual_network }}"
+    subnet: "{{ item.subnet }}"
+    public_ip_name: "{{ item.public_ip_name }}"
+    security_group: "{{ item.security_group }}"
+  register: azure_networkinterfaces
+  with_items: "{{ az_networkinterfaces }}"
+
+- name: debug azure_networkinterfaces
+  debug:
+    var: azure_networkinterfaces
+    verbosity: "{{ verbosity_level }}"
+
+- name: create VMs
+  azure_rm_virtualmachine:
+    resource_group: "{{ item.resource_group }}"
+    name: "{{ item.name }}"
+    vm_size: "{{ item.vm_size }}"
+    admin_username: "{{ item.admin_username }}"
+    ssh_password_enabled: "{{ az_ssh_password_enabled }}"
+    ssh_public_keys: 
+      - path: "/home/{{ az_admin_username }}/.ssh/authorized_keys"
+        key_data: "{{ lookup('file', az_ssh_public_key) }}"
+    network_interfaces: "{{ item.network_interfaces }}"
+    image: "{{ item.image }}"
+    append_tags: no
+  register: azure_virtualmachines
+  with_items: "{{ az_vms }}"
+
+- name: debug azure_virtualmachines
+  debug:
+    var: azure_virtualmachines
+    verbosity: "{{ verbosity_level }}"
+
+- name: create facts for DNS entries
+  vars:
+    az_dns_name: "{{ item.ansible_facts.azure_vm.name }}"
+    az_dns_ip_address: "{{ item.ansible_facts.azure_vm.properties.networkProfile.networkInterfaces[0].properties.ipConfigurations[0].properties.publicIPAddress.properties.ipAddress }}"
+  set_fact:
+    az_dnsrecordsets: "{{ az_dnsrecordsets | default([]) + [ { 'name': az_dns_name, 'type': 'A', 'records': [ { 'entry': az_dns_ip_address }] } ] }}"
+  with_items: "{{ azure_virtualmachines.results }}"
+  when: 
+    - az_dnsrecordset_create is defined
+    - az_dnsrecordset_create
+
+- name: debug azure_virtualmachines
+  debug:
+    var: azure_dnsrecordsets
+    verbosity: "{{ verbosity_level }}"
+  when:
+    - az_dnsrecordset_create is defined
+    - az_dnsrecordset_create
+
+- name: create "A" record sets 
+  azure_rm_dnsrecordset:
+    resource_group: "{{ az_dns_resource_group }}"
+    zone_name: "{{ az_dnsrecordset_zone_name }}"
+    state: present
+    relative_name: "{{ item.name }}"
+    record_type: "{{ item.type }}"
+    records: "{{ item.records }}"
+  register: azure_dnsrecordsets
+  with_items: "{{ az_dnsrecordsets }}"
+  when:
+    - az_dnsrecordset_create is defined
+    - az_dnsrecordset_create
+
+- name: debug azure_dnsrecordsets
+  debug:
+    var: azure_dnsrecordsets
+    verbosity: "{{ verbosity_level }}"
+  when:
+    - az_dnsrecordset_create is defined
+    - az_dnsrecordset_create
