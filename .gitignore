@@ -8,3 +8,4 @@ ansible-role-nodejs/
 ansible-role-pip/
 ansible-role-repo-epel/
 .vs/
+*.swp

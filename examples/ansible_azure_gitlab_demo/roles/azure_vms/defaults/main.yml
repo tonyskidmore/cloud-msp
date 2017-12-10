@@ -7,7 +7,7 @@ az_admin_username: 'cloud_user'
 az_ssh_password_enabled: 'False'
 az_ssh_private_key: "~/.ssh/cloud_user_id_rsa"
 az_ssh_public_key: "~/.ssh/cloud_user_id_rsa.pub"
-az_dnsrecordset_create: False
+az_dnsrecordset_create: True
 az_dns_resource_group: cloud-msp.net
 az_dnsrecordset_zone_name: cloud-msp.net
 verbosity_level: 0

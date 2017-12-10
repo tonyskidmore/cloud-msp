@@ -7,6 +7,9 @@
     az_resource_group: cloud-msp-gitlab-demo
     verbosity_level: 0
 
+  vars_files:
+    - roles/azure_vms/defaults/main.yml
+
   tasks:
 
   - name: delete resource group
@@ -15,9 +18,24 @@
       force: yes
       state: absent
     register: azure_resourcegroup
+    ignore_errors: True
 
-  - name: Debug azure_resourcegroup
+  - name: debug azure_resourcegroup
     debug: 
       var: azure_resourcegroup
       verbosity: "{{ verbosity_level }}"    
 
+  - name: delete dns azure recordset entries
+    azure_rm_dnsrecordset:
+      resource_group: "{{ az_dns_resource_group }}"
+      relative_name: "{{ item.name }}"
+      record_type: A
+      zone_name: "{{ az_dnsrecordset_zone_name }}"
+      state: absent
+    register: azure_dnsrecordset
+    with_items: "{{ az_vms }}"
+
+  - name: debug azure_resourcegroup
+    debug:
+      var: azure_dnsrecordset
+      verbosity: "{{ verbosity_level }}"
