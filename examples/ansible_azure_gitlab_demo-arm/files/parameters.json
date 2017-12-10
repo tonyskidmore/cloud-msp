@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_gitlab_name": {
+            "value": null
+        },
+        "virtualMachines_ansible_name": {
+            "value": null
+        },
+        "virtualMachines_jumphost_name": {
+            "value": null
+        },
+        "storageAccounts_gitlab6506_name": {
+            "value": null
+        },
+        "storageAccounts_ansible1278_name": {
+            "value": null
+        },
+        "storageAccounts_jumphost6024_name": {
+            "value": null
+        },
+        "virtualNetworks_cloud_msp_gitlab_demo_net_name": {
+            "value": null
+        },
+        "networkInterfaces_cloud_msp_gitlab_demo_gitlab_nic_name": {
+            "value": null
+        },
+        "networkInterfaces_cloud_msp_gitlab_demo_ansible_nic_name": {
+            "value": null
+        },
+        "networkInterfaces_cloud_msp_gitlab_demo_jumphost_nic_name": {
+            "value": null
+        },
+        "networkSecurityGroups_cloud_msp_gitlab_demo_secgroup_name": {
+            "value": null
+        },
+        "publicIPAddresses_cloud_msp_gitlab_demo_gitlab_publicip_name": {
+            "value": null
+        },
+        "publicIPAddresses_cloud_msp_gitlab_demo_ansible_publicip_name": {
+            "value": null
+        },
+        "publicIPAddresses_cloud_msp_gitlab_demo_jumphost_publicip_name": {
+            "value": null
+        },
+        "securityRules_SSH_name": {
+            "value": null
+        },
+        "securityRules_HTTP_name": {
+            "value": null
+        },
+        "securityRules_HTTPS_name": {
+            "value": null
+        },
+        "subnets_cloud_msp_gitlab_demo_subnet_name": {
+            "value": null
+        }
+    }
+}
