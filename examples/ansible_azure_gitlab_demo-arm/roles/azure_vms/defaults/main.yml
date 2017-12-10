@@ -12,6 +12,9 @@ az_dns_resource_group: cloud-msp.net
 az_dnsrecordset_zone_name: cloud-msp.net
 verbosity_level: 0
 
+az_template_link: https://raw.githubusercontent.com/tonyskidmore/cloud-msp/master/examples/ansible_azure_gitlab_demo-arm/files/template.json
+az_parameters_link: https://raw.githubusercontent.com/tonyskidmore/cloud-msp/master/examples/ansible_azure_gitlab_demo-arm/files/parameters.json
+
 az_images:
   - offer: CentOS
     publisher: OpenLogic
