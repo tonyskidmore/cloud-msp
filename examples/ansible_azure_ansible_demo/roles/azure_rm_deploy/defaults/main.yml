@@ -14,9 +14,10 @@ az_rg_state: present
 verbosity_level: 0
 
 az_parameters_link: https://github.com/tonyskidmore/cloud-msp/blob/master/examples/ansible_azure_ansible_demo/files/azuredeploy.parameters.json
+az_template_link: https://raw.githubusercontent.com/tonyskidmore/cloud-msp/master/examples/ansible_azure_ansible_demo/files/azuredeploy.json
 az_rm_parameters:
   adminUsername:
-    value: https://raw.githubusercontent.com/tonyskidmore/cloud-msp/master/examples/ansible_azure_ansible_demo/files/azuredeploy.json
+    value: "{{ az_admin_username }}"
   sshKeyData:
     value: "{{ lookup('file', az_ssh_public_key) }}"
 

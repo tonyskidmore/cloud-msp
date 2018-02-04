@@ -6,9 +6,10 @@
     resource_group_name: "{{ az_resource_group }}"
     template_link: "{{ az_template_link }}"
     parameters: "{{ az_rm_parameters }}"
+  register: azure_deployment
 
 - name: debug deployment
   debug:
-    var: deployment
+    var: azure_deployment
     verbosity: "{{ verbosity_level }}"
 
