@@ -1,6 +1,6 @@
 ---
 # https://stackoverflow.com/questions/38647864/ansible-grab-a-key-from-a-dictionary-but-not-in-a-loop
-az_resource_group: cloud-msp-gitlab-demo
+az_resource_group: ansible-demo
 az_location: ukwest
 az_publicipaddress_method: 'Static'
 az_admin_username: 'cloud_user'
@@ -10,10 +10,16 @@ az_ssh_public_key: "~/.ssh/cloud_user_id_rsa.pub"
 az_dnsrecordset_create: True
 az_dns_resource_group: cloud-msp.net
 az_dnsrecordset_zone_name: cloud-msp.net
+az_rg_state: present
 verbosity_level: 0
 
-az_template_link: https://raw.githubusercontent.com/tonyskidmore/cloud-msp/master/examples/ansible_azure_gitlab_demo-arm/files/template.json
-az_parameters_link: https://raw.githubusercontent.com/tonyskidmore/cloud-msp/master/examples/ansible_azure_gitlab_demo-arm/files/parameters.json
+az_parameters_link: https://github.com/tonyskidmore/cloud-msp/blob/master/examples/ansible_azure_ansible_demo/files/azuredeploy.parameters.json
+az_template_link: https://raw.githubusercontent.com/tonyskidmore/cloud-msp/master/examples/ansible_azure_ansible_demo/files/azuredeploy.json
+az_rm_parameters:
+  adminUsername:
+    value: "{{ az_admin_username }}"
+  sshKeyData:
+    value: "{{ lookup('file', az_ssh_public_key) }}"
 
 az_images:
   - offer: CentOS
