@@ -1,0 +1,14 @@
+---
+
+- name: Create Azure Deploy
+  azure_rm_deployment:
+    state: "{{ az_rg_state }}"
+    resource_group_name: "{{ az_resource_group }}"
+    template_link: "{{ az_template_link }}"
+    parameters: "{{ az_rm_parameters }}"
+
+- name: debug deployment
+  debug:
+    var: deployment
+    verbosity: "{{ verbosity_level }}"
+

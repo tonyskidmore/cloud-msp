@@ -1,0 +1,23 @@
+---
+- name: Testing
+  hosts: localhost
+  connection: local
+  tags:
+    - azure
+
+  roles:
+
+  - name: azure VM provisioning
+    role: azure_rm_deploy
+    tags:
+      - azure
+      - provision
+
+  post_tasks:
+
+  - name: refresh the inventory
+    meta: refresh_inventory
+    tags:
+      - azure
+      - inventory
+
