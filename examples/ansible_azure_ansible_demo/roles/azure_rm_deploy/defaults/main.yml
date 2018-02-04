@@ -1,6 +1,6 @@
 ---
 # https://stackoverflow.com/questions/38647864/ansible-grab-a-key-from-a-dictionary-but-not-in-a-loop
-az_resource_group: cloud-msp-gitlab-demo
+az_resource_group: ansible-demo
 az_location: ukwest
 az_publicipaddress_method: 'Static'
 az_admin_username: 'cloud_user'
