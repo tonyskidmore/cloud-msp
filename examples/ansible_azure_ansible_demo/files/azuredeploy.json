@@ -38,17 +38,17 @@
     "subnet1Prefix": "10.0.0.0/24",
     "ansibleNicName": "ansibleNIC",
     "ansiblePublicIPAddressName": "ansiblePublicIP",
-    "ansiblePublicIPAddressType": "Dynamic",
+    "ansiblePublicIPAddressType": "Static",
     "virtualNetworkName": "infraVNET",
     "networkSecurityGroupName": "networkSecurityGroup1",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
     "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
-    "apiVersion": "2015-06-15"
+    "apiVersion": "2017-06-01"
   },
   "resources": [
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('networkSecurityGroupName')]",
       "location": "[variables('location')]",
@@ -86,7 +86,7 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('ansiblePublicIPAddressName')]",
       "location": "[variables('location')]",
@@ -98,14 +98,10 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "location": "[variables('location')]",
-      "tags": {
-        "environment": "[parameters('environment')]",
-        "role": "[variables('ansibleRole')]"
-      },
       "dependsOn": [
         "[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
       ],
@@ -129,7 +125,7 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('ansibleNicName')]",
       "location": "[variables('location')]",
@@ -155,10 +151,14 @@
       }
     },
     {
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('ansibleVmName')]",
       "location": "[variables('location')]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "role": "[variables('ansibleRole')]"
+      },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('ansibleNicName'))]"
       ],
