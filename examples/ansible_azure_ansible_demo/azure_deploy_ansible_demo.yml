@@ -35,14 +35,14 @@
 
   - name: set fact for use with ansible-role-awx-default-password role for tower-cli
     set_fact:
-      awx_host: "http://{{ ansible_public_ip }}"
+      ansible_public_ip_url: "http://{{ ansible_public_ip }}"
 
   - name: debug public ip facts
     debug:
       var: item
     with_items:
       - "{{ ansible_public_ip }}"
-      - "{{ awx_host }}"
+      - "{{ ansible_public_ip_url }}"
 
 - name:  Deploy server roles
   hosts: role_ansible
@@ -71,5 +71,5 @@
 
   - name: role to change admin password after deployment
     role: ansible-role-awx-default-password
-    awx_host: "{{ awx_host }}"
+    awx_host: "{{ ansible_public_ip_url }}"
 
