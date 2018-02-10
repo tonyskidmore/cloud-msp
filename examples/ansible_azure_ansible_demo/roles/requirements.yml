@@ -35,3 +35,7 @@
   scm: git
   name: ansible-role-apache
 
+- src: https://github.com/tonyskidmore/ansible-role-awx-default-password.git
+  scm: git
+  name: ansible-role-awx-default-password
+
