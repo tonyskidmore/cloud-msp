@@ -1,0 +1,11 @@
+---
+- name: test azure inventory
+  hosts: localhost
+  connection: local
+
+  tasks:
+
+  - name: debug inventory fact
+    debug:
+      var: hostvars['ansible']['public_ip']
+  

@@ -17,7 +17,7 @@
 
   - name: deployment variable
     debug:
-      var: deployment
+      var: azure_deployment
 
   - name: refresh the inventory
     meta: refresh_inventory
@@ -28,6 +28,21 @@
   - name: display groups
     debug:
       var: groups
+
+  - name: set fact for public ip of ansible awx server
+    set_fact:
+      ansible_public_ip: "{{  hostvars[az_ansible_vm_name]['public_ip'] }}"
+
+  - name: set fact for use with ansible-role-awx-default-password role for tower-cli
+    set_fact:
+      awx_host: "http://{{ ansible_public_ip }}"
+
+  - name: debug public ip facts
+    debug:
+      var: item
+    with_items:
+      - "{{ ansible_public_ip }}"
+      - "{{ awx_host }}"
 
 - name:  Deploy server roles
   hosts: role_ansible

@@ -1,2 +1,3 @@
 ---
 awx_pip_become: no
+az_ansible_vm_name: ansible
