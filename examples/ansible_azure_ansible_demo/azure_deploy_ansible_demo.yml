@@ -29,3 +29,20 @@
     debug:
       var: groups
 
+- name:  Deploy server roles
+  hosts: all
+
+  pre_tasks:
+
+  - name: wait for VMs
+    wait_for_connection:
+      timeout: 300
+
+  - name: debug ansible_hostname
+    debug:
+      var: ansible_hostname
+
+  tasks:
+
+  - name: import server application roles playbook
+    import_playbook: server-app-roles.yml

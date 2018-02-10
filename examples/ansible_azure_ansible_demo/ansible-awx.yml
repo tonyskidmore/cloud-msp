@@ -1,0 +1,35 @@
+- name: configure epel repo
+  include_role: 
+    name: ansible-role-repo-epel
+  become: yes
+  tags:
+    - awx
+
+# - name: install git
+#   role: ansible-role-git
+#   tags:
+#     - awx
+
+# - name: install ansible
+#   role: ansible-role-ansible
+#   tags:
+#     - awx
+
+# - name: install docker
+#   role: ansible-role-docker
+#   tags:
+#     - awx
+
+# - name: install pip
+#   role: ansible-role-pip
+#   tags:
+#     - awx
+
+# - name: install nodejs
+#   role: ansible-role-nodejs
+#   tags:
+
+# - name: install awx
+#   role: ansible-role-awx
+#   tags:
+#     - awx

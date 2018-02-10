@@ -1,0 +1,12 @@
+- name: Deploy AWX
+  hosts: role_ansible
+  gather_facts: False
+  strategy: free
+  become: yes
+  tags:
+    - awx
+
+  tasks:
+
+  - include: ansible-awx.yml
+    when: "'role_ansible' in group_names"
