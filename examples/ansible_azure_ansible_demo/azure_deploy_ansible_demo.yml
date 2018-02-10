@@ -15,6 +15,10 @@
 
   post_tasks:
 
+  - name: deployment variable
+    debug:
+      var: deployment
+
   - name: refresh the inventory
     meta: refresh_inventory
     tags:

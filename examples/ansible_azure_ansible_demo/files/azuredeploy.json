@@ -9,6 +9,13 @@
         "description": "User name for the Virtual Machine."
       }
     },
+    "environment": {
+      "type": "string",
+      "defaultValue": "dev",
+      "metadata": {
+        "description": "Environment for the deployment i.e. dev, test or prod."
+      }
+    },
     "sshKeyData": {
       "type": "string",
       "metadata": {
@@ -19,6 +26,7 @@
   "variables": {
     "ansibleVmSize": "Basic_A0",
     "ansibleVmName": "ansible",
+    "ansibleRole": "ansible",
     "uniqueDnsLabelPrefix": "[concat('store', uniquestring(resourceGroup().id))]",
     "location": "[resourceGroup().location]",
     "commonImagePublisher": "OpenLogic",
@@ -94,6 +102,10 @@
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "location": "[variables('location')]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "role": "[variables('ansibleRole')]
+      },
       "dependsOn": [
         "[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
       ],
