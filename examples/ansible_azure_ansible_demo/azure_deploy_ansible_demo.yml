@@ -68,5 +68,8 @@
   connection: local
   
   roles:
-  - ansible-role-awx-default-password
+
+  - name: role to change admin password after deployment
+    role: ansible-role-awx-default-password
+    awx_host: "{{ awx_host }}"
 
