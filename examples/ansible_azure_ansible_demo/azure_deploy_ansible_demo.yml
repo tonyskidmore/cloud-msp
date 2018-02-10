@@ -1,5 +1,5 @@
 ---
-- name: Testing
+- name: Deploy azure resource manager group
   hosts: localhost
   connection: local
   tags:
@@ -8,10 +8,10 @@
   roles:
 
   - name: azure VM provisioning
-    role: azure_rm_deploy
+    role: azure_rm_group
     tags:
       - azure
-      - provision
+      - deploy
 
   post_tasks:
 

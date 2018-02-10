@@ -1,0 +1,17 @@
+---
+- name: Delete azure resource manager group
+  hosts: localhost
+  connection: local
+  tags:
+    - azure
+
+  roles:
+
+  - name: azure VM provisioning
+    role: azure_rm_group
+    az_rg_state: absent
+    tags:
+      - azure
+      - delete
+
+

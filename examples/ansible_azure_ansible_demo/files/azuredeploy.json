@@ -17,19 +17,20 @@
     }
   },
   "variables": {
-    "vmSize": "Standard_DS2_v2",
-    "vmName": "sshvm",
-    "ubuntuOSVersion": "16.04-LTS",
+    "ansibleVmSize": "Basic_A0",
+    "ansibleVmName": "ansible",
     "uniqueDnsLabelPrefix": "[concat('store', uniquestring(resourceGroup().id))]",
     "location": "[resourceGroup().location]",
-    "imagePublisher": "Canonical",
-    "imageOffer": "UbuntuServer",
+    "commonImagePublisher": "OpenLogic",
+    "commonImageOffer": "CentOS",
+    "commonImageSku": "7.4",
+    "commonOSVersion": "7.4.20180118",
     "addressPrefix": "10.0.0.0/16",
     "subnet1Name": "Subnet-1",
     "subnet1Prefix": "10.0.0.0/24",
-    "nicName": "sshNIC",
-    "publicIPAddressName": "sshPublicIP",
-    "publicIPAddressType": "Dynamic",
+    "ansibleNicName": "ansibleNIC",
+    "ansiblePublicIPAddressName": "ansiblePublicIP",
+    "ansiblePublicIPAddressType": "Dynamic",
     "virtualNetworkName": "sshVNET",
     "networkSecurityGroupName": "networkSecurityGroup1",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
@@ -65,10 +66,10 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('publicIPAddressName')]",
+      "name": "[variables('ansiblePublicIPAddressName')]",
       "location": "[variables('location')]",
       "properties": {
-        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "publicIPAllocationMethod": "[variables('ansiblePublicIPAddressType')]",
         "dnsSettings": {
           "domainNameLabel": "[variables('uniqueDnsLabelPrefix')]"
         }
@@ -104,10 +105,10 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('nicName')]",
+      "name": "[variables('ansibleNicName')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('ansiblePublicIPAddressName'))]",
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
       ],
       "properties": {
@@ -117,7 +118,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('ansiblePublicIPAddressName'))]"
               },
               "subnet": {
                 "id": "[variables('subnet1Ref')]"
@@ -130,17 +131,17 @@
     {
       "apiVersion": "2016-04-30-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[variables('vmName')]",
+      "name": "[variables('ansibleVmName')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('ansibleNicName'))]"
       ],
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('vmSize')]"
+          "vmSize": "[variables('ansibleVmSize')]"
         },
         "osProfile": {
-          "computerName": "[variables('vmName')]",
+          "computerName": "[variables('ansibleVmName')]",
           "adminUsername": "[parameters('adminUsername')]",
           "linuxConfiguration": {
             "disablePasswordAuthentication": true,
@@ -156,9 +157,9 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[variables('ubuntuOSVersion')]",
+            "publisher": "[variables('commonImagePublisher')]",
+            "offer": "[variables('commonImageOffer')]",
+            "sku": "[variables('commonImageSku')]",
             "version": "latest"
           },
           "osDisk": {
@@ -168,7 +169,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('ansibleNicName'))]"
             }
           ]
         }
