@@ -26,12 +26,12 @@
     "commonImageSku": "7.4",
     "commonOSVersion": "7.4.20180118",
     "addressPrefix": "10.0.0.0/16",
-    "subnet1Name": "Subnet-1",
+    "subnet1Name": "infraSubnet-1",
     "subnet1Prefix": "10.0.0.0/24",
     "ansibleNicName": "ansibleNIC",
     "ansiblePublicIPAddressName": "ansiblePublicIP",
     "ansiblePublicIPAddressType": "Dynamic",
-    "virtualNetworkName": "sshVNET",
+    "virtualNetworkName": "infraVNET",
     "networkSecurityGroupName": "networkSecurityGroup1",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
@@ -56,7 +56,21 @@
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "*",
               "access": "Allow",
-              "priority": 123,
+              "priority": 1001,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "http_rule",
+            "properties": {
+              "description": "Locks inbound down to http default port 80.",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1002,
               "direction": "Inbound"
             }
           }
