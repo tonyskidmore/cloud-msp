@@ -6,23 +6,29 @@
 - name: install git
   include_role: 
     name: ansible-role-git
+  become: yes
 
 - name: install ansible
   include_role: 
     name: ansible-role-ansible
+  become: yes
 
 - name: install docker
   include_role: 
     name: ansible-role-docker
+  become: yes
 
 - name: install pip
   include_role: 
     name: ansible-role-pip
+  become: yes
 
 - name: install nodejs
   include_role: 
     name: ansible-role-nodejs
+  become: yes
 
 - name: install awx
   include_role: 
     name: ansible-role-awx
+  become: yes
