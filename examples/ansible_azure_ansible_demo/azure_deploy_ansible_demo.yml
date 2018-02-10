@@ -21,3 +21,7 @@
       - azure
       - inventory
 
+  - name: display groups
+    debug:
+      var: groups
+
