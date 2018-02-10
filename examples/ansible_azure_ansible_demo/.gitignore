@@ -1,1 +1,3 @@
 tmp/
+*.swp
+ansible-role-awx-default-password/

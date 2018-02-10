@@ -48,3 +48,10 @@
   - import_tasks: ansible-awx.yml
     when: "'role_ansible' in group_names"
 
+- name: Configure AWX
+  hosts: localhost
+  connection: local
+  
+  roles:
+  - ansible-role-awx-default-password
+
