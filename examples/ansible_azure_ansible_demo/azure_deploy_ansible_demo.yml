@@ -30,7 +30,9 @@
       var: groups
 
 - name:  Deploy server roles
-  hosts: all
+  hosts: role_ansible
+  strategy: free
+  become: yes
 
   pre_tasks:
 
@@ -44,5 +46,5 @@
 
   tasks:
 
-  - name: import server application roles playbook
-    import_playbook: server-app-roles.yml
+  - include: ansible-awx.yml
+    when: "'role_ansible' in group_names"
