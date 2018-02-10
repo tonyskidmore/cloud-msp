@@ -32,7 +32,6 @@
 - name:  Deploy server roles
   hosts: role_ansible
   strategy: free
-  become: yes
 
   pre_tasks:
 
@@ -46,5 +45,6 @@
 
   tasks:
 
-  - include: ansible-awx.yml
+  - import_tasks: ansible-awx.yml
     when: "'role_ansible' in group_names"
+
