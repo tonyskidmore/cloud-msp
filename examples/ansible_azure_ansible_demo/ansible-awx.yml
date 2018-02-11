@@ -32,3 +32,14 @@
   include_role: 
     name: ansible-role-awx
   become: yes
+
+- name: debug ansible_public_ip_url
+  debug:
+    var: ansible_public_ip_url
+
+- name: configure default password
+  include_role: 
+    name: ansible-role-awx-default-password
+  vars:
+    awx_host: "{{ ansible_public_ip_url }}"
+  become: yes
