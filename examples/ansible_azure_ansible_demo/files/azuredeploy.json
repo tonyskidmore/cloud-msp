@@ -9,32 +9,34 @@
         "description": "User name for the Virtual Machine."
       }
     },
-	"ansibleVmSize": {
-		"type": "string",
-		"defaultValue": "Standard_A2",
-		"allowedValues": [
-			"Standard_A2",
-			"Standard_A3",
-			"Basic_A2",
-			"Basic_A3"
-		],
-		"metadata": {
-			"description": "Size of the Ansible VM to deploy."
-		}
-	},
-	"jumphostVmSize": {
-		"type": "string",
-		"defaultValue": "Standard_A2",
-		"allowedValues": [
-			"Standard_A2",
-			"Standard_A3",
-			"Basic_A2",
-			"Basic_A3"
-		],
-		"metadata": {
-			"description": "Size of the Ansible VM to deploy."
-		}
-	},
+    "ansibleVmSize": {
+      "type": "string",
+      "defaultValue": "Standard_A2",
+      "allowedValues": [
+              "Standard_A2",
+              "Standard_A3",
+              "Basic_A2",
+              "Basic_A3"
+	],
+	"metadata": {
+              "description": "Size of the Ansible VM to deploy."
+	}
+     },
+     "jumphostVmSize": {
+       "type": "string",
+       "defaultValue": "Basic_A0",
+       "allowedValues": [
+               "Standard_A2",
+               "Standard_A3",
+               "Basic_A0",
+	       "Basic_A1",
+	       "Basic_A2",
+               "Basic_A3"
+       ],
+       "metadata": {
+             "description": "Size of the Ansible VM to deploy."
+       }
+    },
     "environment": {
       "type": "string",
       "defaultValue": "dev",
