@@ -7,6 +7,15 @@
     },
     "sshKeyData": {
       "value": "GEN-SSH-PUB-KEY"
+    },
+    "ansibleVmSize": {
+      "value": "Standard_A2"
+    },
+    "jumphostVmSize": {
+      "value": "Basic_A0"
+    },     
+    "environment": {
+      "value": "dev"
     }
   }
 }
