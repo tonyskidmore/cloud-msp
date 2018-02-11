@@ -325,9 +325,13 @@
     }
   ],
   "outputs": {
-    "sshCommand": {
+    "ansibleSshCommand": {
       "type": "string",
-      "value": "[concat('ssh ', parameters('adminUsername'), '@', variables('uniqueDnsLabelPrefix'), '.', resourceGroup().location, '.cloudapp.azure.com')]"
-    }
+      "value": "[concat('ssh ', parameters('adminUsername'), '@', variables('ansibleUniqueDnsLabelPrefix'), '.', resourceGroup().location, '.cloudapp.azure.com')]"
+    },
+    "jumphostSshCommand": {
+      "type": "string",
+      "value": "[concat('ssh ', parameters('adminUsername'), '@', variables('jumphostUniqueDnsLabelPrefix'), '.', resourceGroup().location, '.cloudapp.azure.com')]"
+    }	
   }
 }
