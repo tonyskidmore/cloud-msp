@@ -32,3 +32,9 @@
   include_role: 
     name: ansible-role-awx
   become: yes
+
+- name: install awx
+  include_role:
+    name: ansible-role-awx-default-password
+  become: yes
+
