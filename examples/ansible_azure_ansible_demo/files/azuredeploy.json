@@ -9,19 +9,32 @@
         "description": "User name for the Virtual Machine."
       }
     },
-    "ansibleVmSize": {
-      "type": "string",
-      "defaultValue": "Standard_A2",
-      "allowedValues": [
-        "Standard_A2",
-        "Standard_A3",
-        "Basic_A2",
-        "Basic_A3"
-      ],
-      "metadata": {
-        "description": "Size of the Ansible VM to deploy."
-      }
-    },
+	"ansibleVmSize": {
+		"type": "string",
+		"defaultValue": "Standard_A2",
+		"allowedValues": [
+			"Standard_A2",
+			"Standard_A3",
+			"Basic_A2",
+			"Basic_A3"
+		],
+		"metadata": {
+			"description": "Size of the Ansible VM to deploy."
+		}
+	},
+	"jumpserverVmSize": {
+		"type": "string",
+		"defaultValue": "Standard_A2",
+		"allowedValues": [
+			"Standard_A2",
+			"Standard_A3",
+			"Basic_A2",
+			"Basic_A3"
+		],
+		"metadata": {
+			"description": "Size of the Ansible VM to deploy."
+		}
+	},
     "environment": {
       "type": "string",
       "defaultValue": "dev",
@@ -39,7 +52,10 @@
   "variables": {
     "ansibleVmName": "ansible",
     "ansibleRole": "ansible",
-    "uniqueDnsLabelPrefix": "[concat('store', uniquestring(resourceGroup().id))]",
+    "jumphostVmName": "jumphost",
+    "jumphostRole": "jumphost",    
+    "ansibleUniqueDnsLabelPrefix": "[concat('store', uniquestring(resourceGroup().id))]",
+    "jumphostUniqueDnsLabelPrefix": "[concat('store', uniquestring(resourceGroup().id))]",
     "location": "[resourceGroup().location]",
     "commonImagePublisher": "OpenLogic",
     "commonImageOffer": "CentOS",
@@ -51,6 +67,9 @@
     "ansibleNicName": "ansibleNIC",
     "ansiblePublicIPAddressName": "ansiblePublicIP",
     "ansiblePublicIPAddressType": "Static",
+    "jumphostNicName": "ansibleNIC",
+    "jumphostPublicIPAddressName": "jumphostPublicIP",
+    "jumphostPublicIPAddressType": "Static",    
     "virtualNetworkName": "infraVNET",
     "networkSecurityGroupName": "networkSecurityGroup1",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
@@ -105,10 +124,22 @@
       "properties": {
         "publicIPAllocationMethod": "[variables('ansiblePublicIPAddressType')]",
         "dnsSettings": {
-          "domainNameLabel": "[variables('uniqueDnsLabelPrefix')]"
+          "domainNameLabel": "[variables('ansibleUniqueDnsLabelPrefix')]"
         }
       }
     },
+    {
+      "apiVersion": "2017-06-01",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('jumphostPublicIPAddressName')]",
+      "location": "[variables('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "[variables('jumphostPublicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[variables('jumphostUniqueDnsLabelPrefix')]"
+        }
+      }
+    },    
     {
       "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/virtualNetworks",
@@ -163,6 +194,32 @@
       }
     },
     {
+      "apiVersion": "2017-06-01",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('jumphostNicName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('jumphostPublicIPAddressName'))]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig2",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('jumphostPublicIPAddressName'))]"
+              },
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },    
+    {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('ansibleVmName')]",
@@ -208,6 +265,57 @@
           "networkInterfaces": [
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('ansibleNicName'))]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-03-30",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[variables('jumphostVmName')]",
+      "location": "[variables('location')]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "role": "[variables('jumphostRole')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('jumphostNicName'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('jumphostVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('jumphostVmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+              "publicKeys": [
+                {
+                  "path": "[variables('sshKeyPath')]",
+                  "keyData": "[parameters('sshKeyData')]"
+                }
+              ]
+            }
+          }
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('commonImagePublisher')]",
+            "offer": "[variables('commonImageOffer')]",
+            "sku": "[variables('commonImageSku')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('jumphostNicName'))]"
             }
           ]
         }
