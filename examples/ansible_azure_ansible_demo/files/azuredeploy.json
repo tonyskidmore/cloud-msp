@@ -22,7 +22,7 @@
 			"description": "Size of the Ansible VM to deploy."
 		}
 	},
-	"jumpserverVmSize": {
+	"jumphostVmSize": {
 		"type": "string",
 		"defaultValue": "Standard_A2",
 		"allowedValues": [
