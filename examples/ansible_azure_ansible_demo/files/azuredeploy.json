@@ -9,6 +9,13 @@
         "description": "User name for the Virtual Machine."
       }
     },
+    "dnsResourceGroup": {
+      "type": "string",
+      "defaultValue": "cloud-msp.net",
+      "metadata": {
+        "description": "Resource group where DNS records are created."
+      }
+    },	  
     "ansibleVmSize": {
       "type": "string",
       "defaultValue": "Standard_A2",
@@ -80,6 +87,41 @@
     "apiVersion": "2017-06-01"
   },
   "resources": [
+    {
+        "apiVersion": "2017-05-10",
+        "name": "nestedTemplate",
+        "type": "Microsoft.Resources/deployments",
+        "resourceGroup": "[parameters('dnsResourceGroup')]",
+        "dependsOn": [
+          "[concat('Microsoft.Network/publicIPAddresses/', variables('ansiblePublicIPAddressName'))]"
+        ],	    
+        "properties": {
+            "mode": "Incremental",
+            "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {},
+                "variables": {},
+                "resources": [
+                    {
+                        "type": "Microsoft.Network/dnsZones/A",
+                        "name": "[variables('ansibleVmName')]",
+                        "apiVersion": "2017-09-01",
+                        "properties": {
+                          "metadata": {},
+			  "TTL": "60",
+			  "ARecords": [
+				  {
+					  "ipv4address": "variables('ansiblePublicIPAddressName')"
+				  }
+		          ]
+			}
+                    }
+                ]
+            },
+            "parameters": {}
+        }
+    },	  
     {
       "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/networkSecurityGroups",
