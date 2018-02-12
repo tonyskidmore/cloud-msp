@@ -1,5 +1,5 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
@@ -107,14 +107,14 @@
                         "type": "Microsoft.Network/dnsZones/A",
                         "name": "cloud-msp.net/ansible",
                         "apiVersion": "2017-09-01",
+			"scale": null,
                         "properties": {
-                          "metadata": {},
-			  "TTL": "60",
-			  "ARecords": [
-				  {
-					  "ipv4Address": "51.141.0.167"
-				  }
-		          ]
+			    "TTL": "3600",
+			    "ARecords": [
+                                {
+                                    "ipv4Address": "51.141.0.167"
+				}
+		            ]
 			}
                     }
                 ]
