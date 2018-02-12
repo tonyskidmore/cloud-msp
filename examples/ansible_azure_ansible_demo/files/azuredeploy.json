@@ -105,7 +105,7 @@
                 "resources": [
                     {
                         "type": "Microsoft.Network/dnsZones/A",
-                        "name": "[variables('ansibleVmName')]",
+                        "name": "[concat('/',parameters('dnsResourceGroup'), concat('/A/', variables('ansibleVmName')))]",
                         "apiVersion": "2017-09-01",
                         "properties": {
                           "metadata": {},
