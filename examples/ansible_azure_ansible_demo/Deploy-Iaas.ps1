@@ -17,12 +17,21 @@ $azureAccount = Add-AzureRmAccount -Credential $cred
 
 $location = 'UK West'
 $resourceGroupName = 'ansible-demo'
-$resourceDeploymentName = 'ansible-demo-deployment'
+$resourceDeploymentName = 'ansible-demo'
 $templatePath = 'files'
 $templateFile = 'azuredeploy.json'
 $template = Join-Path -Path $pwd -ChildPath "files\$templateFile"
 $adminUserName = "cloud_user"
 $sshKeyData = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQClumoBR/nnZfhhUFNGBtCYf1Sa4u+QzMf6OrzExNcnWxHvctdLxJozH1PZGt4CrcJ7Tp6roBXU0ZdqsYDZW+slICeIudvUerMqJEvzA7SWAEaawfenC9QJuxbzd8VOZi3DxURw6nE2mhgtFb1v4oepJkdVQFwc1PQIqE8W3jBjLguUn+TfJQpjF6aFJdDR+KQmI/DWDpsLXy2g56lIWaJP5Wv0eX4WarFQnAIN9eKn8o4CqccYwJ1a/TWyVgpFpUGU2nZoY2FF1oU+8n17RGqh3yoEoDC/c6GTgVfb3KWnx6Ai9zyj686vMnPfPca/q/YkYLUUg5Co/EQu1NwmoNKp"
+
+}
+
+### Force delete resource group
+{
+
+    Remove-AzureRmPublicIpAddress -Name 'ansiblePublicIP' -ResourceGroupName $resourceDeploymentName -Force
+    Remove-AzureRmPublicIpAddress -Name 'jumphostPublicIP' -ResourceGroupName $resourceDeploymentName -Force
+    Remove-AzureRmResourceGroup -Name $resourceGroupName -Force
 
 }
 
@@ -34,6 +43,13 @@ Get-AzureRmVMImagePublisher -Location $location #check all the publishers availa
 Get-AzureRmVMImageOffer -Location $location -PublisherName "OpenLogic" #look for offers for a publisher
 Get-AzureRmVMImageSku -Location $location -PublisherName "OpenLogic" -Offer "CentOS" #view SKUs for an offer
 Get-AzureRmVMImage -Location $location -PublisherName "OpenLogic" -Offer "CentOS" -Skus "7.4" -Version "7.4.20180118" #pick one!
+
+}
+
+### Find Sizes
+{
+
+Get-AzureRmVMSize -Location $location
 
 }
 
