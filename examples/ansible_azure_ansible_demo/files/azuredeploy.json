@@ -105,14 +105,14 @@
                 "resources": [
                     {
                         "type": "Microsoft.Network/dnsZones/A",
-                        "name": "cloud-msp.net/ansible",
+                        "name": "[concat(parameters('dnsResourceGroup'), '/', variables('ansibleVmName'))]",
                         "apiVersion": "2017-09-01",
 			"scale": null,
                         "properties": {
 			    "TTL": "3600",
 			    "ARecords": [
                                 {
-                                    "ipv4Address": "51.141.0.167"
+                                    "ipv4Address": "variables('ansiblePublicIPAddressName')"
 				}
 		            ]
 			}
