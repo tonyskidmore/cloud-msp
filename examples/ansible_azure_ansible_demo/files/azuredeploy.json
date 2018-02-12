@@ -112,7 +112,7 @@
 			  "TTL": "60",
 			  "ARecords": [
 				  {
-					  "ipv4address": "variables('ansiblePublicIPAddressName')"
+					  "ipv4Address": "51.141.0.167"
 				  }
 		          ]
 			}
