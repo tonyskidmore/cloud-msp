@@ -112,7 +112,7 @@
 			    "TTL": "3600",
 			    "ARecords": [
                                 {
-                                    "ipv4Address": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('ansiblePublicIPAddressName'))]"
+                                    "ipv4Address": "[resourceId('Microsoft.Network/publicIPAddresses',variables('ansiblePublicIPAddressName'))]"
 				}
 		            ]
 			}
