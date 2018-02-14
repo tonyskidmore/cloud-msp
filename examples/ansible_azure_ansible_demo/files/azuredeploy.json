@@ -44,6 +44,21 @@
              "description": "Size of the Ansible VM to deploy."
        }
     },
+     "dockerVmSize": {
+       "type": "string",
+       "defaultValue": "Basic_A0",
+       "allowedValues": [
+               "Standard_A2",
+               "Standard_A3",
+               "Basic_A0",
+	       "Basic_A1",
+	       "Basic_A2",
+               "Basic_A3"
+       ],
+       "metadata": {
+             "description": "Size of the Docker VM to deploy."
+       }
+    },	  
     "environment": {
       "type": "string",
       "defaultValue": "dev",
@@ -62,9 +77,12 @@
     "ansibleVmName": "ansible",
     "ansibleRole": "ansible",
     "jumphostVmName": "jumphost",
-    "jumphostRole": "jumphost",    
+    "jumphostRole": "jumphost",
+    "dockerVmName": "docker",
+    "dockerRole": "docker", 	  
     "ansibleUniqueDnsLabelPrefix": "[concat('storeansible', uniquestring(resourceGroup().id))]",
     "jumphostUniqueDnsLabelPrefix": "[concat('storejumphost', uniquestring(resourceGroup().id))]",
+    "dockerUniqueDnsLabelPrefix": "[concat('storejumphost', uniquestring(resourceGroup().id))]",	  
     "location": "[resourceGroup().location]",
     "commonImagePublisher": "OpenLogic",
     "commonImageOffer": "CentOS",
@@ -78,7 +96,8 @@
     "ansiblePublicIPAddressType": "Static",
     "jumphostNicName": "jumphostNIC",
     "jumphostPublicIPAddressName": "jumphostPIP",
-    "jumphostPublicIPAddressType": "Static",    
+    "jumphostPublicIPAddressType": "Static", 
+    "dockerNicName": "jumphostNIC",
     "virtualNetworkName": "infraVNET",
     "networkSecurityGroupName": "networkSecurityGroup1",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
@@ -116,7 +135,21 @@
 				}
 		            ]
 			}
-                    }
+                    },
+                    {
+                        "type": "Microsoft.Network/dnsZones/A",
+                        "name": "[concat(parameters('dnsResourceGroup'), '/', variables('jumphostVmName'))]",
+                        "apiVersion": "2017-09-01",
+			"scale": null,
+                        "properties": {
+			    "TTL": "3600",
+			    "ARecords": [
+                                {
+                                    "ipv4Address": "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('jumphostPublicIPAddressName'))).IpAddress]"
+				}
+		            ]
+			}
+                    }			
                 ]
             },
             "parameters": {}
@@ -262,7 +295,29 @@
           }
         ]
       }
-    },    
+    },
+    {
+      "apiVersion": "2017-06-01",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('dockerNicName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig3",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },	  
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
@@ -364,7 +419,58 @@
           ]
         }
       }
-    }
+    },
+    {
+      "apiVersion": "2017-03-30",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[variables('dockerVmName')]",
+      "location": "[variables('location')]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "role": "[variables('dockerRole')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('dockerNicName'))]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('dockerVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[variables('dockerVmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+              "publicKeys": [
+                {
+                  "path": "[variables('sshKeyPath')]",
+                  "keyData": "[parameters('sshKeyData')]"
+                }
+              ]
+            }
+          }
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('commonImagePublisher')]",
+            "offer": "[variables('commonImageOffer')]",
+            "sku": "[variables('commonImageSku')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('dockerNicName'))]"
+            }
+          ]
+        }
+      }
+    }	  
   ],
   "outputs": {
     "ansibleSshCommand": {
