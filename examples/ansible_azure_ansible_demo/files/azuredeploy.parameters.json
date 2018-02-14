@@ -14,6 +14,9 @@
     "jumphostVmSize": {
       "value": "Basic_A0"
     },     
+    "dockerVmSize": {
+      "value": "Basic_A0"
+    },    
     "environment": {
       "value": "dev"
     }
