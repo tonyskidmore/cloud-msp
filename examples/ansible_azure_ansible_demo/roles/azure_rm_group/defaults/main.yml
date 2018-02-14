@@ -14,6 +14,7 @@ az_rg_state: present
 az_environment: dev
 az_ansible_vm_size: "Standard_A2"
 az_jumphost_vm_size: "Basic_A0"
+az_docker_vm_size: "Basic_A0"
 verbosity_level: 0
 
 az_parameters_link: https://github.com/tonyskidmore/cloud-msp/blob/master/examples/ansible_azure_ansible_demo/files/azuredeploy.parameters.json
@@ -27,6 +28,8 @@ az_rm_parameters:
     value: "{{ az_ansible_vm_size }}"
   jumphostVmSize:
     value: "{{ az_jumphost_vm_size }}"
+  dockerVmSize:
+    value: "{{ az_docker_vm_size }}"
   environment:
     value: "{{ az_environment }}"
 

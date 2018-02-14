@@ -7,6 +7,7 @@ ansible-role-gitlab/
 ansible-role-nodejs/
 ansible-role-pip/
 ansible-role-repo-epel/
+ansible-role-nginx/
 ansible-role-awx-default-password/
 .vs/
 *.swp
