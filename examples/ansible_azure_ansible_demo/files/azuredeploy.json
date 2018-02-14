@@ -97,7 +97,7 @@
     "jumphostNicName": "jumphostNIC",
     "jumphostPublicIPAddressName": "jumphostPIP",
     "jumphostPublicIPAddressType": "Static", 
-    "dockerNicName": "jumphostNIC",
+    "dockerNicName": "dockerNIC",
     "virtualNetworkName": "infraVNET",
     "networkSecurityGroupName": "networkSecurityGroup1",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
