@@ -30,11 +30,12 @@
       var: groups
 
 - name:  Deploy server roles
-  hosts: role_ansible
+  hosts: role_ansible:role_jumphost:role_docker
   strategy: free
   tags:
     - azure
     - awx
+    - docker
 
   pre_tasks:
 
@@ -50,4 +51,7 @@
 
   - import_tasks: ansible-awx.yml
     when: "'role_ansible' in group_names"
+
+  - import_tasks: docker.yml
+    when: "'role_docker' in group_names"
 
