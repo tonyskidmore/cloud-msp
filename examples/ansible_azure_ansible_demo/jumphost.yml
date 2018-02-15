@@ -13,3 +13,8 @@
   include_role: 
     name: ansible-role-ansible
   become: yes
+
+- name: install apache
+  include_role: 
+    name: ansible-role-apache
+  become: yes
