@@ -28,10 +28,11 @@
     name: ansible-role-nodejs
   become: yes
 
-- name: install nginx
-  include_role: 
-    name: ansible-role-nginx
-  become: yes
+# commenting out nginx until we have sorted config out
+# name: install nginx
+# include_role: 
+#   name: ansible-role-nginx
+# become: yes
 
 - name: install awx
   include_role: 

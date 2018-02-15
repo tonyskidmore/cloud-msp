@@ -1,0 +1,2 @@
+---
+ansible_ssh_common_args: '-o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -q cloud_user@ansible.cloud-msp.net -i ~/.ssh/cloud_user_id_rsa"'
