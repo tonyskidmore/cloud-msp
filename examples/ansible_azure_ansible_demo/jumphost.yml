@@ -1,0 +1,9 @@
+- name: install git
+  include_role: 
+    name: ansible-role-git
+  become: yes
+
+- name: install ansible
+  include_role: 
+    name: ansible-role-ansible
+  become: yes

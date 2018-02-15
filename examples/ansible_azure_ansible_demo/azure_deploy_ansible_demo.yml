@@ -55,3 +55,5 @@
   - import_tasks: docker.yml
     when: "'role_docker' in group_names"
 
+  - import_tasks: jumphost.yml
+    when: "'role_jumphost' in group_names"
