@@ -427,7 +427,8 @@
       "location": "[variables('location')]",
       "tags": {
         "environment": "[parameters('environment')]",
-        "role": "[variables('dockerRole')]"
+        "role": "[variables('dockerRole')]",
+	"access": "proxy"
       },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('dockerNicName'))]"
