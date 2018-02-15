@@ -1,3 +1,9 @@
+---
+- name: configure epel repo
+  include_role:
+    name: ansible-role-repo-epel
+  become: yes
+
 - name: install git
   include_role: 
     name: ansible-role-git
