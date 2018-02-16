@@ -44,3 +44,7 @@
     name: ansible-role-awx-default-password
   become: yes
 
+- name: configure awx
+  include_role:
+    name: ansible-role-awx-config
+  become: yes

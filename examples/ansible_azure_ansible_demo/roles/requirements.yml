@@ -39,6 +39,10 @@
   scm: git
   name: ansible-role-awx-default-password
 
+- src: https://github.com/tonyskidmore/ansible-role-awx-config.git
+  scm: git
+  name: ansible-role-awx-config
+
 - src: https://github.com/tonyskidmore/ansible-role-nginx.git
   scm: git
   name: ansible-role-nginx
