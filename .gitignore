@@ -9,5 +9,6 @@ ansible-role-pip/
 ansible-role-repo-epel/
 ansible-role-nginx/
 ansible-role-awx-default-password/
+ansible-role-awx-config/
 .vs/
 *.swp
