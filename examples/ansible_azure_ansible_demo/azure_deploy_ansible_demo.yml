@@ -51,9 +51,15 @@
 
   - import_tasks: ansible-awx.yml
     when: "'role_ansible' in group_names"
+    tags:
+      - awx-config
 
   - import_tasks: docker.yml
     when: "'role_docker' in group_names"
+    tags:
+      - docker-config
 
   - import_tasks: jumphost.yml
     when: "'role_jumphost' in group_names"
+    tags:
+      - jumphost-config

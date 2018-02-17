@@ -1,3 +1,4 @@
 tmp/
 *.swp
 ansible-role-awx-default-password/
+test-awx.yml
