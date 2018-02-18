@@ -18,3 +18,45 @@
   include_role: 
     name: ansible-role-apache
   become: yes
+
+- name: Encrypt password
+  set_fact:
+    jumphost_user_encpwd: "{{ jumphost_user.password  | password_hash('sha512') }}"
+
+- name: Create service user account
+  user:
+    name: "{{ jumphost_user.name }}"
+    state: "{{ jumphost_user.state | default('present') }}"
+    comment: "{{ jumphost.comment | default('created by Ansible') }}"
+    createhome: "{{ jumphost.createhome | default(omit) }}"
+    shell: "{{ jumphost.shell | default(omit) }}"
+    password: "{{ jumphost_user_encpwd | default(omit) }}"
+    update_password: on_create
+  become: yes
+  ignore_errors: True
+  register: jumphost_user_create
+
+# https://github.com/lqueryvg/ansible-role-chage
+- name: Set service account expiry details
+  chage:
+    user: "{{ jumphost_user.name }}"
+    sp_max: "{{ jumphost_user.maxdays | default(omit) }}"
+    sp_expire: "{{ jumphost_user.expiredate | default(omit) }}"
+  become: yes
+  when: (jumphost_user.maxdays is defined) or
+        (jumphost_user.expires is defined)
+  ignore_errors: True
+  register: jumphost_user_expiry
+
+- name: Configure sudo access
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^{{ jumphost_user.name }}"
+    line: "{{ jumphost_user.name }}\t{{ jumphost_user.name.sudoer_entry }}"
+    backup: yes
+  when: jumphost_user.sudoer_entry is defined
+  become: yes
+  ignore_errors: True
+  register: jumphost_user_sudo
+
