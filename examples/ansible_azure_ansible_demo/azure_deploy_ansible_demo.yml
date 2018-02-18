@@ -2,6 +2,7 @@
 - name: Deploy azure resource manager group
   hosts: localhost
   connection: local
+  gather_facts: False
   tags:
     - azure
 
@@ -51,6 +52,7 @@
     when: "'role_ansible' in group_names"
     tags:
       - awx-config
+      - azure-dns
 
   - import_tasks: docker.yml
     when: "'role_docker' in group_names"
@@ -62,38 +64,48 @@
     tags:
       - jumphost-config
 
-  post_tasks:
-  - name: set DNS fact
-    set_fact:
-      demorest_dns_txt_value: "{{ hostvars[groups['role_ansible'][0]]['awx_base64_user_credential'] }}"
-    ignore_errors: yes
-    when: awx_base64_user_credential is defined
-    delegate_to: localhost
-
-  - name: debug DNS value
-    debug:
-      var: demorest_dns_txt_value
-    delegate_to: localhost
-
 - name: Update Azure DNS
   hosts: localhost
   gather_facts: false
   connection: local
+  tags:
+    - azure-dns
 
   tasks:
 
-  - name: set DNS TXT record
-    azure_rm_dnsrecordset:
-      resource_group: "{{ az_dns_resource_group }}"
-      zone_name: "{{ az_dnsrecordset_zone_name }}"
-      state: present
-      relative_name: "{{ az_dnsrecordset_relative_name }}"
-      record_type: "{{ az_dnsrecordset_record_type }}"
-      records:
-        - entry: "{{ demorest_dns_txt_value }}"
-    register: azure_dnsrecordset
+  - name: set azure DNS TXT record
+    block:
 
-  - name: debug azure_dnsrecordset
-    debug:
-      var: azure_dnsrecordset
+    - name: set DNS fact
+      set_fact:
+        demorest_dns_txt_value: "{{ hostvars[groups['role_ansible'][0]]['awx_base64_user_credential'] }}"
 
+    - name: create DNS facts
+      set_fact:
+        az_dnsrecords: "{{ { 'records': [ {'entry': demorest_dns_txt_value} ] } }}"
+
+    - name: debug demorest_dns_txt_value
+      debug:
+        var: demorest_dns_txt_value
+
+    - name: set DNS TXT record
+      azure_rm_dnsrecordset:
+        resource_group: "{{ az_dns_resource_group }}"
+        zone_name: "{{ az_dnsrecordset_zone_name }}"
+        state: present
+        relative_name: "{{ az_dnsrecordset_relative_name }}"
+        record_type: "{{ az_dnsrecordset_record_type }}"
+        records: "{{ az_dnsrecords.records }}"
+      register: azure_dnsrecordset
+      when: demorest_dns_txt_value is defined
+      tags:
+        - azure-dns
+
+    - name: debug azure_dnsrecordset
+      debug:
+        var: azure_dnsrecordset
+        verbosity: "{{ verbosity_level }}"
+
+    when:
+      - az_dns_process_records is defined
+      - az_dns_process_records

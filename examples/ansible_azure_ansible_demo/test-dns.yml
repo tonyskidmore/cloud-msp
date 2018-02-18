@@ -1,0 +1,35 @@
+- name: Update Azure DNS
+  hosts: localhost
+  gather_facts: false
+  connection: local
+
+  vars:
+    az_dns_resource_group: cloud-msp.net
+    az_dnsrecordset_zone_name: cloud-msp.net
+    az_dnsrecordset_relative_name: demores
+    az_dnsrecordset_record_type: TXT
+
+  tasks:
+
+  - name: set DNS fact
+    set_fact:
+      demorest_dns_txt_value: "test"
+
+  - name: set DNS TXT record
+    azure_rm_dnsrecordset:
+      resource_group: cloud-msp.net
+      zone_name: cloud-msp.net
+      # ate: present
+      relative_name: test.cloud-msp.net
+      record_type: TXT
+      records: 
+        - entry: 'v=spf1 a -all'
+    register: azure_dnsrecordset
+    when: demorest_dns_txt_value is defined
+    tags:
+      - azure-dns
+
+  - name: debug azure_dnsrecordset
+    debug:
+      var: azure_dnsrecordset
+
