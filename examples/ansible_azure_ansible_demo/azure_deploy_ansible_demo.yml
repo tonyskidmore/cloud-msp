@@ -18,6 +18,7 @@
   - name: deployment variable
     debug:
       var: azure_deployment
+      verbosity: "{{ verbosity_level }}"
 
   - name: refresh the inventory
     meta: refresh_inventory
@@ -28,6 +29,7 @@
   - name: display groups
     debug:
       var: groups
+      verbosity: "{{ verbosity_level }}"
 
 - name:  Deploy server roles
   hosts: role_ansible:role_jumphost:role_docker
@@ -42,10 +44,6 @@
   - name: wait for VMs
     wait_for_connection:
       timeout: 300
-
-  - name: debug ansible_hostname
-    debug:
-      var: ansible_hostname
 
   tasks:
 

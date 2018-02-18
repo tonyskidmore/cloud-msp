@@ -2,3 +2,4 @@
 ansible_connection: local
 awx_pip_become: no
 az_ansible_vm_name: ansible
+verbosity_level: 2
