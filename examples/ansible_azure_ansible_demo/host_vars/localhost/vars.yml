@@ -2,7 +2,7 @@
 ansible_connection: local
 awx_pip_become: no
 az_ansible_vm_name: ansible
-az_resource_group: cloud-msp.net
+az_dns_resource_group: cloud-msp.net
 az_dnsrecordset_zone_name: cloud-msp.net
 az_dnsrecordset_relative_name: demorest
 az_dnsrecordset_record_type: TXT
