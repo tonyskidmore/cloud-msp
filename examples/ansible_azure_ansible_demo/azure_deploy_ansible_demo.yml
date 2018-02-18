@@ -84,14 +84,14 @@
 
   - name: set DNS TXT record
     azure_rm_dnsrecordset:
-    resource_group: "{{ az_dns_resource_group }}"
-    zone_name: "{{ az_dnsrecordset_zone_name }}"
-    state: present
-    relative_name: "{{ az_dnsrecordset_relative_name }}"
-    record_type: "{{ az_dnsrecordset_record_type }}"
-    records:
-      - entry: "{{ demorest_dns_txt_value }}"
-  register: azure_dnsrecordset
+      resource_group: "{{ az_dns_resource_group }}"
+      zone_name: "{{ az_dnsrecordset_zone_name }}"
+      state: present
+      relative_name: "{{ az_dnsrecordset_relative_name }}"
+      record_type: "{{ az_dnsrecordset_record_type }}"
+      records:
+        - entry: "{{ demorest_dns_txt_value }}"
+    register: azure_dnsrecordset
 
   - name: debug azure_dnsrecordset
     debug:
