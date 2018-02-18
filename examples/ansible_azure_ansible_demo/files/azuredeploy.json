@@ -189,6 +189,20 @@
               "priority": 1002,
               "direction": "Inbound"
             }
+          },
+          {
+            "name": "https_rule",
+            "properties": {
+              "description": "Locks inbound down to https default port 443.",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1003,
+              "direction": "Inbound"
+            }
           }
         ]
       }
