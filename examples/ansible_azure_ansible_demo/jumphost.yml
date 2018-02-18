@@ -60,3 +60,9 @@
   ignore_errors: True
   register: jumphost_user_sudo
 
+- name: restart apache
+  service:
+    name: httpd
+    state: restarted
+  become: yes
+
