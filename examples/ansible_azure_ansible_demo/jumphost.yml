@@ -27,9 +27,9 @@
   user:
     name: "{{ jumphost_user.name }}"
     state: "{{ jumphost_user.state | default('present') }}"
-    comment: "{{ jumphost.comment | default('created by Ansible') }}"
-    createhome: "{{ jumphost.createhome | default(omit) }}"
-    shell: "{{ jumphost.shell | default(omit) }}"
+    comment: "{{ jumphost_user.comment | default('created by Ansible') }}"
+    createhome: "{{ jumphost_user.createhome | default(omit) }}"
+    shell: "{{ jumphost_user.shell | default(omit) }}"
     password: "{{ jumphost_user_encpwd | default(omit) }}"
     update_password: on_create
   become: yes
