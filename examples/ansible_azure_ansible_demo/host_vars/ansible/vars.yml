@@ -1,6 +1,14 @@
 ---
-awx_external_hostname: awxdemo
+awx_external_hostname: ansible
 awx_fqdn: "{{ awx_external_hostname }}.{{ cloud_domain }}"
 nodejs_version: "6.x"
 pip_install_packages:
   - name: docker-py
+
+ansible_copy_certs: "true"
+ansible_certs:
+  - src: "~/ansible.cloud-msp.net/certs/cert.pem"
+    dest: "/etc/ssl/certs/certificate.pem"
+  - src: "~/ansible.cloud-msp.net/certs/privkey.pem"
+    dest: "/etc/ssl/certs/certificate.key"
+

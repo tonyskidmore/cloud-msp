@@ -68,10 +68,27 @@
   become: yes
   with_items: "{{ jumphost_packages }}"
 
+- name: copy certs
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    #owner: root
+    #group: root
+    #mode: 0600
+  with_items: "{{ jumphost_certs }}"
+  when: 
+    - jumphost_copy_certs is defined
+    - jumphost_copy_certs
+  become: yes
+
+- name: install shellinabox
+  include_role: 
+    name: ansible-role-shellinabox
+  become: yes
+
 - name: restart apache
   service:
     name: httpd
     state: restarted
   become: yes
   
-

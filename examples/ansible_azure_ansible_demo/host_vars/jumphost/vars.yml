@@ -11,3 +11,10 @@ jumphost_user:
 
 jumphost_packages:
   - putty
+
+jumphost_copy_certs: "true"
+jumphost_certs:
+  - src: "~/jumphost.cloud-msp.net/certs/cert.pem"
+    dest: "/etc/ssl/certs/certificate.pem"
+  - src: "~/jumphost.cloud-msp.net/certs/privkey.pem"
+    dest: "/etc/ssl/certs/certificate.key"

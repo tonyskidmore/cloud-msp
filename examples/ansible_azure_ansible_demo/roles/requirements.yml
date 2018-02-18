@@ -43,6 +43,10 @@
   scm: git
   name: ansible-role-awx-config
 
+- src: https://github.com/tonyskidmore/ansible-role-shellinabox.git
+  scm: git
+  name: ansible-role-shellinabox
+
 - src: https://github.com/tonyskidmore/ansible-role-nginx.git
   scm: git
   name: ansible-role-nginx

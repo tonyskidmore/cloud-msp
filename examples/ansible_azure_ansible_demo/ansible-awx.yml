@@ -1,3 +1,17 @@
+---
+- name: copy certs
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    #owner: root
+    #group: root
+    #mode: 0600
+  with_items: "{{ ansible_certs }}"
+  when:
+    - ansible_copy_certs is defined
+    - ansible_copy_certs
+  become: yes
+
 - name: configure epel repo
   include_role: 
     name: ansible-role-repo-epel
