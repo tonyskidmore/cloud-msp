@@ -60,9 +60,17 @@
   ignore_errors: True
   register: jumphost_user_sudo
 
+- name: install packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ jumphost_packages }}"
+
 - name: restart apache
   service:
     name: httpd
     state: restarted
   become: yes
+  
 

@@ -8,3 +8,6 @@ jumphost_user:
   sudoer_entry: "ALL=(ALL)       NOPASSWD: ALL"
   expiredate: -1
   maxdays: -1
+
+jumphost_packages:
+  - putty
