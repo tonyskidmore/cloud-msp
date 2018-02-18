@@ -65,6 +65,7 @@
     name: "{{ item }}"
     state: present
     update_cache: yes
+  become: yes
   with_items: "{{ jumphost_packages }}"
 
 - name: restart apache

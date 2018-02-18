@@ -63,10 +63,15 @@
       - jumphost-config
 
   post_tasks:
-  - name: debug base64
-    debug:
-      var: item
+  - name: set DNS fact
+    set_fact:
+      demorest_dns_txt_value: "{{ hostvars[groups['role_ansible'][0]]['awx_base64_user_credential'] }}"
     ignore_errors: yes
     when: awx_base64_user_credential is defined
-    with_items:
-      - "{{ awx_base64_user_credential }}"
+    delegate_to: localhost
+
+  - name: debug DNS value
+    debug:
+      var: demorest_dns_txt_value
+    delegate_to: localhost
+
