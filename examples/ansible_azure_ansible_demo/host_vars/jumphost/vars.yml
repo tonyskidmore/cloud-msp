@@ -14,7 +14,7 @@ jumphost_packages:
 
 jumphost_copy_certs: "true"
 jumphost_certs:
-  - src: "~/jumphost.cloud-msp.net/certs/cert.pem"
+  - src: "~/certs/jumphost.cloud-msp.net/cert.pem"
     dest: "/etc/ssl/certs/certificate.pem"
-  - src: "~/jumphost.cloud-msp.net/certs/privkey.pem"
+  - src: "~/certs/jumphost.cloud-msp.net/privkey.pem"
     dest: "/etc/ssl/certs/certificate.key"
