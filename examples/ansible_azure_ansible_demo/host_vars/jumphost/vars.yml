@@ -1,4 +1,9 @@
 ---
+jumphost_fqdn: jumphost.cloud-msp.net
+shellinabox_apache_fqdn: "{{ jumphost_fqdn }}"
+# ansible-role-apach variable to not start service
+apache_state: stopped
+
 jumphost_user:
   name: ansible_user
   password: D0ntPutH3r3
