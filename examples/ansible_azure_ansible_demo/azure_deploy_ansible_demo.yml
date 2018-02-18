@@ -63,10 +63,10 @@
       - jumphost-config
 
   post_tasks:
-
   - name: debug base64
     debug:
       var: item
+    ignore_errors: yes
+    when: awx_base64_user_credential is defined
     with_items:
-      - "{{ hostvars['jumphost']['awx_base64_user_credential'] }}"
       - "{{ awx_base64_user_credential }}"

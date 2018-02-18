@@ -53,7 +53,7 @@
     dest: /etc/sudoers
     state: present
     regexp: "^{{ jumphost_user.name }}"
-    line: "{{ jumphost_user.name }}\t{{ jumphost_user.name.sudoer_entry }}"
+    line: "{{ jumphost_user.name }}\t{{ jumphost_user.sudoer_entry }}"
     backup: yes
   when: jumphost_user.sudoer_entry is defined
   become: yes
