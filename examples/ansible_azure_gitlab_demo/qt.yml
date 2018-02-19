@@ -68,7 +68,7 @@
   - name: ensure an "A" record set with multiple records
     azure_rm_dnsrecordset:
       resource_group: cloud-msp.net
-      relative_name: ansible
+      relative_name: ansibletest
       zone_name: cloud-msp.net
       record_type: A
       state: present

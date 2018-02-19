@@ -11,5 +11,6 @@ ansible-role-nginx/
 ansible-role-awx-default-password/
 ansible-role-awx-config/
 ansible-demo-user/
+ansible-role-shellinabox/
 .vs/
 *.swp
