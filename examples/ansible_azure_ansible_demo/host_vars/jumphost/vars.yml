@@ -1,4 +1,5 @@
 ---
+jumphost_hostname: jumphost
 jumphost_fqdn: jumphost.cloud-msp.net
 shellinabox_apache_fqdn: "{{ jumphost_fqdn }}"
 # ansible-role-apach variable to not start service
