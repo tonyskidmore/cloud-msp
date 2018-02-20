@@ -14,3 +14,6 @@ docker_local_host: tcp://docker:2375
 
 docker_pull_images:
   - 'tonyskidmore/centos-ssh'
+
+docker_pip_packages:
+  - { package: 'docker-py' }

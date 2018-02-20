@@ -10,9 +10,21 @@
     var: docker_selinux
     verbosity: "{{ verbosity_level }}"
 
+- name: install pip
+  include_role:
+    name: ansible-role-pip
+  become: yes
+
 - name: install docker
   include_role: 
     name: ansible-role-docker
+  become: yes
+
+- name: Install pip packages
+  pip:
+    name: "{{ item.package }}"
+    version: "{{ item.version | default(omit) }}"
+  with_items: "{{ docker_pip_packages }}"
   become: yes
 
 - name: Encrypt password
