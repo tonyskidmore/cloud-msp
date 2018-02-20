@@ -36,9 +36,21 @@
     name: ansible-role-ansible
   become: yes
 
+- name: install pip
+  include_role:
+    name: ansible-role-pip
+  become: yes
+
 - name: install apache
   include_role: 
     name: ansible-role-apache
+  become: yes
+
+- name: Install pip packages
+  pip:
+    name: "{{ item.package }}"
+    version: "{{ item.version | default(omit) }}"
+  with_items: "{{ jumphost_pip_packages }}"
   become: yes
 
 - name: Encrypt password

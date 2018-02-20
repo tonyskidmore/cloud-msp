@@ -1,0 +1,12 @@
+---
+docker_user:
+  name: ansible_user
+  password: D0ntPutH3r3
+  state: present
+  comment: "Ansible user"
+  createhome: yes
+  sudoer_entry: "ALL=(ALL)       NOPASSWD: ALL"
+  expiredate: -1
+  maxdays: -1
+  groups: docker
+

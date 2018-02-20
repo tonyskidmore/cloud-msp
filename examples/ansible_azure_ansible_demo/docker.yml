@@ -1,5 +1,95 @@
+---
+- name: configure selinux
+  selinux:
+    policy: targeted
+    state: permissive
+  register: docker_selinux
+  become: yes
+
+- debug: 
+    var: docker_selinux
+    verbosity: "{{ verbosity_level }}"
+
 - name: install docker
   include_role: 
     name: ansible-role-docker
   become: yes
+
+- name: Encrypt password
+  set_fact:
+    docker_user_encpwd: "{{ docker_user.password  | password_hash('sha512') }}"
+
+- name: Create service user account
+  user:
+    name: "{{ docker_user.name }}"
+    state: "{{ docker_user.state | default('present') }}"
+    comment: "{{ docker_user.comment | default('created by Ansible') }}"
+    createhome: "{{ docker_user.createhome | default(omit) }}"
+    shell: "{{ docker_user.shell | default(omit) }}"
+    password: "{{ docker_user_encpwd | default(omit) }}"
+    groups: "{{ docker_user.groups | default(omit) }}"
+    update_password: on_create
+  become: yes
+  ignore_errors: True
+  register: docker_user_create
+
+# https://github.com/lqueryvg/ansible-role-chage
+- name: Set service account expiry details
+  chage:
+    user: "{{ docker_user.name }}"
+    sp_max: "{{ docker_user.maxdays | default(omit) }}"
+    sp_expire: "{{ docker_user.expiredate | default(omit) }}"
+  become: yes
+  when: (docker_user.maxdays is defined) or
+        (docker_user.expires is defined)
+  ignore_errors: True
+  register: docker_user_expiry
+
+- name: Configure sudo access
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: "^{{ docker_user.name }}"
+    line: "{{ docker_user.name }}\t{{ docker_user.sudoer_entry }}"
+    backup: yes
+  when: docker_user.sudoer_entry is defined
+  become: yes
+  ignore_errors: True
+  register: docker_user_sudo
+
+- name: Configure sshd access
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication yes"
+    backup: yes
+  become: yes
+  ignore_errors: True
+  register: docker_sshd
+
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+  when: docker_sshd | changed
+  become: yes
+
+- name: create docker daemon configuration file
+  copy:
+    src: files/daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0644
+  register: docker_daemon
+  become: yes
+
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+  when: docker_daemon | changed
+  become: yes
+
 

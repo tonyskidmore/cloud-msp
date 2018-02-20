@@ -24,3 +24,7 @@ jumphost_certs:
     dest: "/etc/ssl/certs/certificate.pem"
   - src: "~/certs/jumphost.cloud-msp.net/privkey.pem"
     dest: "/etc/ssl/certs/certificate.key"
+
+jumphost_pip_packages:
+  - { package: 'docker-py' }
+
