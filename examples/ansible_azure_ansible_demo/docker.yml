@@ -92,8 +92,8 @@
   when: docker_daemon | changed
   become: yes
 
-- name: pull docker image
+- name: pull docker images
   docker_image:
     name: "{{ item }}"
     docker_host: "{{ docker_local_host }}"
-  with_items: "{{ docker_pull images }}"
+  with_items: "{{ docker_pull_images }}"
