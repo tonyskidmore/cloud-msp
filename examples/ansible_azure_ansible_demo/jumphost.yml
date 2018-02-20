@@ -132,4 +132,22 @@
     name: httpd
     state: restarted
   become: yes
+
+- name: Configure sshd access
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    state: present
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication yes"
+    backup: yes
+  become: yes
+  ignore_errors: True
+  register: jumphost_sshd
+
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+  when: jumphost_sshd | changed
+  become: yes
   
