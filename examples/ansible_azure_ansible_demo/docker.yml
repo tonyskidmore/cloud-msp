@@ -10,6 +10,11 @@
     var: docker_selinux
     verbosity: "{{ verbosity_level }}"
 
+- name: configure epel repo
+  include_role:
+    name: ansible-role-repo-epel
+  become: yes
+
 - name: install pip
   include_role:
     name: ansible-role-pip
