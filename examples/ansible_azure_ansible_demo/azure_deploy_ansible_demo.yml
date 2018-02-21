@@ -6,6 +6,23 @@
   tags:
     - azure
 
+  pre_tasks:
+
+  - name: "stat {{ ssh_key_user }} for private key"
+    stat:
+      path: "~/.ssh/{{ ssh_key_user }}_id_rsa"
+    register: id_rsa  
+    tags:
+      - ssh_key
+
+  - name: Generate SSH keys
+    command: "ssh-keygen -b 2048 -t rsa -f ~/.ssh/{{ ssh_key_user }}_id_rsa -q -N ''"
+    args:
+      creates: "~/.ssh/{{ ssh_key_user }}id_rsa"
+    when: id_rsa.stat.exists == false
+    tags:
+      - ssh_key
+
   roles:
 
   - name: azure VM provisioning
