@@ -5,7 +5,7 @@ This example uses the [azure_rm_deployment](http://docs.ansible.com/ansible/late
 - [Ansible](https://www.ansible.com/) and [Ansible AWX](https://github.com/ansible/awx) server - to allow the triggering and execution of Ansible playbooks
 - Jump host server - to support remote connections
 
-The GitLab demo was something that we setup as part of a session we were running on an introduction to source control.  The idea was that participants could login to the jump server and run a few commands to clone some projects, update and push back.  To access the jump host a job was configured on AWX and the user would trigger the job and create their own account and environment using [PSPuttySession](https://github.com/tonyskidmore/PSPuttySession).  This was the least impact and best chance of working method I could think of without having issues with software installation/configuration etc. on remote users machines.
+The GitLab demo was something that we setup as part of a session we were running on an introduction to source control.  The idea was that participants could login to the jump server and run a few commands to clone some projects, update and push back.  To access the jump host a job was configured on AWX and the user would trigger the job and create their own account and environment using [PSDemoSession](https://github.com/tonyskidmore/PSDemoSession).  This was the least impact and best chance of working method I could think of without having issues with software installation/configuration etc. on remote users machines.
 
 
 There are 2 main playbooks in this example:
@@ -53,4 +53,4 @@ ansible 2.4.2.0
 ```
 
 ## Issues
-
+Encountered an issue with Ansible module [azure_rm_dnsrecordset](http://docs.ansible.com/ansible/latest/azure_rm_dnsrecordset_module.html) trying to dynamically create a DNS TXT record.  Disabled dynamic creation for now, will raise an [Ansible Issue](https://github.com/ansible/ansible/issues).
