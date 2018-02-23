@@ -8,6 +8,7 @@ This example uses the [azure_rm_deployment](http://docs.ansible.com/ansible/late
 
 The GitLab demo was something that we setup as part of a session we were running on an introduction to source control.  The idea was that participants could login to the jump server and run a few commands to clone some projects, update and push back.  To access the jump host a job was configured on AWX and the user would trigger the job and create their own account and environment using [PSDemoSession](https://github.com/tonyskidmore/PSDemoSession).  This was the least impact and best chance of working method I could think of without having issues with software installation/configuration etc. on remote users machines.
 
+![](images/ansible-demo-arch.png)
 
 There are 2 main playbooks in this example:
 
