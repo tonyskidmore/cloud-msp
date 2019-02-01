@@ -1,0 +1,254 @@
+---
+# Simple example of creating a Linux VM
+# based on:
+# Create a complete Linux virtual machine environment in Azure with Ansible
+# https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ansible-create-complete-vm
+
+- name: Create Azure VM
+  hosts: localhost
+  connection: local
+
+  vars:
+    az_resource_group: gitlab_lab
+    az_location: uksouth
+    az_vnet_name: gitlab_lab_net
+    az_vnet_prefixes: "10.0.0.0/16"
+    az_subnet_name: "infra"
+    az_subnet_prefix: "10.0.1.0/24"
+    az_publicipaddress_method: 'Static'
+    az_publicipaddress_name: "gitlab_lab_pip"
+    az_securitygroup_name: "gitlab_lab_allow_sg"
+    az_securitygroup_rules:
+      - name: SSH
+        protocol: Tcp
+        destination_port_range: 22
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: HTTPS
+        protocol: Tcp
+        destination_port_range: 443
+        access: Allow
+        priority: 1002
+        direction: Inbound
+    az_networkinterface_name: 'gitlab_lab_vm_nic'
+    az_virtualmachine_name: 'gitlab_vm'
+    az_virtualmachine_size: 'Standard_B2ms'
+    az_admin_username: 'cloud_user'
+    az_ssh_password_enabled: 'False'
+    az_ssh_private_key: "~/.ssh/cloud_user_id_rsa"
+    az_ssh_public_key: "~/.ssh/cloud_user_id_rsa.pub"
+    az_image:
+      offer: CentOS
+      publisher: OpenLogic
+      sku: '7.5'
+      version: latest
+    verbosity_level: 0
+
+  pre_tasks:
+
+  - name: Run stat of root public key
+    stat:
+      path: "{{ az_ssh_public_key }}"
+    register: id_rsa
+    tags:
+      - ssh_key
+
+  - name: Generate SSH keys
+    command: "ssh-keygen -b 2048 -t rsa -f ~/.ssh/{{ az_admin_username }}_id_rsa -q -N ''"
+    args:
+      creates: ~/.ssh/id_rsa
+    when: id_rsa.stat.exists == false
+    tags:
+      - ssh_key
+
+  - name: get resource group facts
+    azure_rm_resourcegroup_facts:
+      name: "{{ az_resource_group }}"
+    register: azure_resourcegroup_facts
+    tags:
+      - azure_rm_resourcegroup
+      - azure_rm_resourcegroup_facts
+
+  - name: Debug azure_resourcegroup_facts
+    debug:
+      var: azure_resourcegroup_facts
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_resourcegroup
+      - azure_rm_resourcegroup_facts
+
+  - name: create resource group
+    azure_rm_resourcegroup:
+      name: "{{ az_resource_group }}"
+      location: "{{ az_location }}"
+      state: present
+    register: azure_resourcegroup
+    tags:
+      - azure_rm_resourcegroup
+
+  - name: Debug azure_resourcegroup
+    debug:
+      var: azure_resourcegroup
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_resourcegroup
+
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: "{{ az_resource_group }}"
+      name: "{{ az_vnet_name }}"
+      address_prefixes: "{{ az_vnet_prefixes }}"
+    register: azure_virtualnetwork
+    tags:
+      - azure_rm_virtualnetwork
+
+  - name: Debug azure_virtualnetwork
+    debug:
+      var: azure_virtualnetwork
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_virtualnetwork
+
+  - name: Add subnet
+    azure_rm_subnet:
+      resource_group: "{{ az_resource_group }}"
+      name: "{{ az_subnet_name }}"
+      address_prefix: "{{ az_subnet_prefix }}"
+      virtual_network: "{{ az_vnet_name }}"
+    register: azure_subnet
+    tags:
+      - azure_rm_subnet
+
+  - name: Debug azure_subnet
+    debug:
+      var: azure_subnet
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_subnet
+
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: "{{ az_resource_group }}"
+      allocation_method: "{{ az_publicipaddress_method }}"
+      name: "{{ az_publicipaddress_name }}"
+    register: azure_publicipaddress
+    tags:
+      - azure_rm_publicipaddress
+
+  - name: Debug azure_publicipaddress
+    debug:
+      var: azure_publicipaddress
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_publicipaddress
+
+  - name: Create Network Security Group that allows SSH
+    azure_rm_securitygroup:
+      resource_group: "{{ az_resource_group }}"
+      name: "{{ az_securitygroup_name }}"
+      rules: "{{ az_securitygroup_rules }}"
+    register: azure_securitygroup
+    tags:
+      - azure_rm_securitygroup
+
+  - name: Debug azure_securitygroup
+    debug:
+      var: azure_securitygroup
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_securitygroup
+
+  - name: Create virtual network inteface card
+    azure_rm_networkinterface:
+      resource_group: "{{ az_resource_group }}"
+      name: "{{ az_networkinterface_name }}"
+      virtual_network: "{{ az_vnet_name }}"
+      subnet: "{{ az_subnet_name }}"
+      public_ip_name: "{{ az_publicipaddress_name }}"
+      security_group: "{{ az_securitygroup_name }}"
+    register: azure_networkinterface
+    tags:
+      - azure_rm_networkinterface
+
+  - name: Debug azure_networkinterface
+    debug:
+      var: azure_networkinterface
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_networkinterface
+
+  - name: Create VM
+    azure_rm_virtualmachine:
+      resource_group: "{{ az_resource_group }}"
+      # name: centos7
+      name: "{{ az_virtualmachine_name }}"
+      vm_size: "{{ az_virtualmachine_size }}"
+      admin_username: "{{ az_admin_username }}"
+      ssh_password_enabled: "{{ az_ssh_password_enabled }}"
+      ssh_public_keys:
+        - path: "/home/{{ az_admin_username }}/.ssh/authorized_keys"
+          key_data: "{{ lookup('file', az_ssh_public_key) }}"
+      network_interfaces: "{{ az_networkinterface_name }}"
+      image: "{{ az_image }}"
+    register: azure_virtualmachine
+    tags:
+      - azure_rm_virtualmachine
+
+  - name: Set azure_vm facts
+    set_fact:
+      azure_vm_public_ip: "{{ azure_publicipaddress.state.ip_address }}"
+      azure_vm_username: "{{ az_admin_username }}"
+      azure_vm_ssh_private_key: "{{ az_ssh_private_key }}"
+
+  - name: Debug azure_virtualmachine
+    debug:
+      var: azure_virtualmachine
+      verbosity: "{{ verbosity_level }}"
+    tags:
+      - azure_rm_virtualmachine
+
+  - name: Create in memory group
+    add_host:
+      name: "{{ azure_vm_public_ip }}"
+      group: "azure_vms"
+      ansible_user: "{{ az_admin_username }}"
+      ansible_ssh_private_key_file: "{{ az_ssh_private_key }}"
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+    changed_when: False
+
+- name: Example connect to Azure VM
+  hosts: azure_vms
+  gather_facts: no
+
+  pre_tasks:
+
+  - name: wait for VMs
+    wait_for_connection:
+      timeout: 300
+
+  - name: Now gather facts
+    setup:
+
+  - name: Debug azure VM ansible facts variables
+    debug:
+      var: hostvars[inventory_hostname]
+
+  roles:
+
+  - name: deploy gitlab
+    role: ansible-role-gitlab
+    become: yes
+    tags:
+      - gitlab
+      - deploy
+
+- name: Debug connect message
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+
+  - name: Debug SSH connection
+    debug:
+      msg: "ssh {{ azure_vm_username }}@{{ azure_vm_public_ip }} -i {{ azure_vm_ssh_private_key }}"
