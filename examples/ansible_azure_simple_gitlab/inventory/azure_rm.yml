@@ -1,0 +1,14 @@
+---
+
+plugin: azure_rm
+auth_source: env
+include_vm_resource_groups:
+  - Demo-CloudTools-rg
+  - GitLabRunnersRG
+conditional_groups:
+  all_the_hosts: true
+  linux_shared_runners: "'linux' in tags.os and 'shared' in tags.gitlab_runner"
+  windows_shared_runners: "'windows' in tags.os and 'shared' in tags.gitlab_runner"
+keyed_groups:
+  - prefix: tag
+    key: tags.executor | default('none')
