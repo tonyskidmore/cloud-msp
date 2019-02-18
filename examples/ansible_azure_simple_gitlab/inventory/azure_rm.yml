@@ -12,3 +12,5 @@ conditional_groups:
 keyed_groups:
   - prefix: tag
     key: tags.executor | default('none')
+  - prefix: build
+    key: tags.build | default('none')
