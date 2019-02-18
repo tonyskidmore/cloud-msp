@@ -1,3 +1,9 @@
 ---
 
 gitlab_edition: "gitlab-ee"
+gitlab_external_url: "https://gitlab.cloud-msp.net/"
+gitlab_create_self_signed_cert: false
+gitlab_ssl_certificate: "/etc/gitlab/ssl/gitlab.crt"
+gitlab_ssl_certificate_key: "/etc/gitlab/ssl/gitlab.key"
+gitlab_ssl_local_certificate: "~/certs/gitlab.cloud-msp.net/gitlab.crt"
+gitlab_ssl_local_certificate_key: "~/certs/gitlab.cloud-msp.net/gitlab.key"

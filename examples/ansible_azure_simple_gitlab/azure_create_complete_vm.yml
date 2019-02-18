@@ -9,7 +9,7 @@
   connection: local
 
   vars:
-    az_resource_group: gitlab_lab
+    az_resource_group: gitlab_demo_lab
     az_location: uksouth
     az_vnet_name: gitlab_lab_net
     az_vnet_prefixes: "10.0.0.0/16"
@@ -31,8 +31,14 @@
         access: Allow
         priority: 1002
         direction: Inbound
+      - name: HTTP
+        protocol: Tcp
+        destination_port_range: 80
+        access: Allow
+        priority: 1003
+        direction: Inbound
     az_networkinterface_name: 'gitlab_lab_vm_nic'
-    az_virtualmachine_name: 'gitlab_vm'
+    az_virtualmachine_name: 'gitlabvm'
     az_virtualmachine_size: 'Standard_B2ms'
     az_admin_username: 'cloud_user'
     az_ssh_password_enabled: 'False'
