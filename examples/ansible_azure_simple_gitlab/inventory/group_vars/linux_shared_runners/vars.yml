@@ -2,3 +2,18 @@
 
 ansible_user: "cloud_user"
 ansible_ssh_private_key_file: "~/.ssh/cloud_user_id_rsa"
+
+gitlab_runner_package_name: 'gitlab-runner'
+gitlab_runner_registration_token: "reg-token-here"
+gitlab_runner_coordinator_url: "https://gitlab.cloud-msp.net/ci"
+gitlab_runner_executor: "docker"
+gitlab_runner_docker_image: 'tonyskidmore/cloud-tools:latest'
+gitlab_runner_description: 'shared-runner2'
+gitlab_runner_tags: 
+  - 'runner2'
+  - 'shared'
+  - 'linux'
+  - 'docker'
+gitlab_runner_docker_volumes:
+  - "/var/run/docker.sock:/var/run/docker.sock"
+  - "/cache"

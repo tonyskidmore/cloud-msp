@@ -1,0 +1,25 @@
+---
+
+- name: Configure gitlab runner
+  hosts: linux_shared_runners
+
+  pre_tasks:
+
+    - name: Create hosts entry
+      lineinfile:
+        path: /etc/hosts
+        regexp: '^10\.0\.1\.4'
+        line: '10.0.1.4     gitlab.cloud-msp.net'
+      become: yes
+
+  roles:
+
+    - name: Using geerlingguy docker role
+      role: ansible-role-docker
+      become: yes
+
+    - name: Using https://github.com/tonyskidmore/ansible-gitlab-runner
+      role: ansible-gitlab-runner
+      become: yes
+
+  
